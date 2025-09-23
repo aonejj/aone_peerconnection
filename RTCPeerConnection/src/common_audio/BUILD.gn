@@ -1,0 +1,142 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("common_audio") {
+    deps = [
+        ":audio_util",
+        ":resampler",
+        ":signal_processing_library",
+        ":signal_processing",
+        ":third_party",
+        ":vad",
+    ]
+}
+
+rtc_sfu_source_set("audio_util_include") {
+    sources = [
+        "include/audio_util.h"
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("audio_util") {
+    sources = [
+        "audio_util.cc"
+    ]
+
+    deps = [
+        ":audio_util_include",
+    ]
+}
+
+rtc_sfu_source_set("signal_processing") {
+    sources = [
+        "signal_processing/spl_init.c",
+        "signal_processing/min_max_operations.c",
+        "signal_processing/cross_correlation.c",
+        "signal_processing/downsample_fast.c",
+        "signal_processing/division_operations.c",
+        "signal_processing/energy.c",
+        "signal_processing/get_scaling_square.c",
+        "signal_processing/vector_scaling_operations.c",
+        "signal_processing/resample.c",
+        "signal_processing/resample_48khz.c",
+        "signal_processing/resample_by_2.c",
+        "signal_processing/resample_by_2_internal.c",
+        "signal_processing/resample_by_2_internal.h",
+        "signal_processing/resample_fractional.c",        
+    ]
+
+    deps = [
+        ":signal_processing_library",
+        "../rtc_base:checks",
+        "../rtc_base:compile_assert_c",
+        "../rtc_base:sanitizer",
+        "../rtc_base/system:arch",
+        "../system_wrappers",
+        ":third_party",
+    ]
+}
+
+rtc_sfu_source_set("signal_processing_library") {
+    public = [
+        "signal_processing/include/signal_processing_library.h",
+    ]
+}
+
+rtc_sfu_source_set("third_party") {
+    sources = [
+        "third_party/spl_sqrt_floor/spl_sqrt_floor.c",
+        "third_party/spl_sqrt_floor/spl_sqrt_floor.h",
+        "third_party/ooura/fft_size_128/ooura_fft.cc",
+        "third_party/ooura/fft_size_128/ooura_fft.h",
+        "third_party/ooura/fft_size_128/ooura_fft_tables_common.h",
+        "third_party/ooura/fft_size_128/ooura_fft_sse2.cc",
+        "third_party/ooura/fft_size_256/fft4g.cc",
+        "third_party/ooura/fft_size_256/fft4g.h",
+    ]
+
+    deps = [
+        "../rtc_base/system:arch",
+        "../system_wrappers:system_wrappers",
+
+    ]
+}
+
+rtc_sfu_source_set("smoothing_filter") {
+    sources = [
+        "smoothing_filter.cc",
+        "smoothing_filter.h",
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+        "../rtc_base:time_utils",
+    ]
+}
+
+rtc_sfu_source_set("resampler") {
+    sources = [
+        "resampler/include/push_resampler.h",
+        "resampler/include/resampler.h",
+        "resampler/push_resampler.cc",
+        "resampler/push_sinc_resampler.cc",
+        "resampler/push_sinc_resampler.h",
+        "resampler/resampler.cc",
+        "resampler/sinc_resampler.cc",
+        "resampler/sinc_resampler.h"       
+    ]
+
+    deps = [
+        "../api:array_view",
+        "../rtc_base:checks",
+        "../rtc_base:logging",   
+        "../rtc_base/memory:aligned_malloc",
+        "../rtc_base/system:arch",
+    ]
+}
+
+rtc_sfu_source_set("vad") {
+    sources = [
+        "vad/include/vad.h",
+        "vad/include/webrtc_vad.h",
+        "vad/vad_core.c",
+        "vad/vad_core.h",
+        "vad/vad_filterbank.c",
+        "vad/vad_filterbank.h",
+        "vad/vad_gmm.c",
+        "vad/vad_gmm.h",
+        "vad/vad_sp.c",
+        "vad/vad_sp.h",
+        "vad/webrtc_vad.c", 
+        "vad/vad.cc",       
+    ]
+
+    deps = [
+        ":signal_processing_library",
+        "../rtc_base:checks",
+    ]
+}

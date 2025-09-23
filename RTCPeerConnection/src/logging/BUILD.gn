@@ -1,0 +1,68 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("logging") {
+    deps = [
+        ":ice_logger",
+        ":rtc_event_dtls_transport_state",
+        ":rtc_event_dtls_writable_state",
+    ]
+}
+
+rtc_sfu_source_set("ice_logger") {
+    sources = [
+        "rtc_event_log/ice_logger.cc",
+        "rtc_event_log/ice_logger.h",
+    ]
+
+    deps = [
+        ":rtc_event_ice_candidate_pair",
+        ":rtc_event_ice_candidate_pair_config",
+        "../api/rtc_event_log",
+    ]
+}
+
+rtc_sfu_source_set("rtc_event_ice_candidate_pair") {
+    sources = [
+        "rtc_event_log/events/rtc_event_ice_candidate_pair.cc",
+        "rtc_event_log/events/rtc_event_ice_candidate_pair.h",
+    ]
+
+    deps = [
+        "../api/rtc_event_log",
+    ]
+}
+
+rtc_sfu_source_set("rtc_event_ice_candidate_pair_config") {
+    sources = [
+        "rtc_event_log/events/rtc_event_ice_candidate_pair_config.cc",
+        "rtc_event_log/events/rtc_event_ice_candidate_pair_config.h",
+    ]
+
+    deps = [
+        "../api/rtc_event_log",
+    ]
+}
+
+rtc_sfu_source_set("rtc_event_dtls_transport_state") {
+    sources = [
+        "rtc_event_log/events/rtc_event_dtls_transport_state.cc",
+        "rtc_event_log/events/rtc_event_dtls_transport_state.h",
+    ]
+
+    deps = [
+        "../api:dtls_transport_interface",
+        "../api/rtc_event_log",
+    ]
+}
+
+rtc_sfu_source_set("rtc_event_dtls_writable_state") {
+    sources = [
+        "rtc_event_log/events/rtc_event_dtls_writable_state.cc",
+        "rtc_event_log/events/rtc_event_dtls_writable_state.h",
+    ]
+
+    deps = [
+        "../api/rtc_event_log",
+    ]    
+}

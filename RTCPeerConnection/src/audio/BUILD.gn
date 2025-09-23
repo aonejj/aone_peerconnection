@@ -1,0 +1,35 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("audio") {
+    deps = [
+        ":audio_level",
+        ":audio_frame_operations",
+    ]
+}
+
+rtc_sfu_source_set("audio_level") {
+    sources = [
+        "audio_level.cc",
+        "audio_level.h",
+    ]
+
+    deps = [
+        ":audio_frame_operations",
+        "../rtc_base/synchronization:mutex",
+        "../rtc_base:thread_annotations",
+        "../api/audio:audio_frame",
+        "../common_audio:signal_processing_library",
+    ]
+}
+
+rtc_sfu_source_set("audio_frame_operations") {
+    sources = [
+        "utility/audio_frame_operations.cc",
+        "utility/audio_frame_operations.h",
+    ]
+
+    deps = [
+        "../api/audio:audio_frame",
+    ]
+}

@@ -1,0 +1,53 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("remote_bitrate_estimator") {
+    sources = [
+        "aimd_rate_control.cc",
+        "aimd_rate_control.h",
+        "bwe_defines.cc",
+        "include/bwe_defines.h",
+        "include/remote_bitrate_estimator.h",
+        "inter_arrival.cc",
+        "inter_arrival.h",
+        "overuse_detector.cc",
+        "overuse_detector.h",
+        "overuse_estimator.cc",
+        "overuse_estimator.h",
+        "remote_bitrate_estimator_abs_send_time.cc",
+        "remote_bitrate_estimator_abs_send_time.h",
+        "remote_bitrate_estimator_single_stream.cc",
+        "remote_bitrate_estimator_single_stream.h"
+    ]
+
+    deps = [
+        "../include:module",
+        "../include:module_common_types",
+        "../include:module_common_types_public",
+        "../rtp_rtcp:rtp_rtcp_format",
+        "../congestion_controller/goog_cc:link_capacity_estimator",
+        "../../../rtc_pc_src:_deprecate_defines",
+        "../../api:network_state_predictor",
+        "../../api:rtp_headers",
+        "../../api/units:data_rate",
+        "../../api/units:data_size",
+        "../../api/units:time_delta",
+        "../../api/units:timestamp",
+        "../../api/transport:network_control",
+        "../../api/transport:webrtc_key_value_config",
+        "../../rtc_base:checks",
+        "../../rtc_base:logging", 
+        "../../rtc_base:numerics",
+        "../../rtc_base:constructor_magic",
+        "../../rtc_base:race_checker",
+        "../../rtc_base:rate_statistics",
+        "../../rtc_base:threading",
+        "../../rtc_base:thread_annotations",
+        "../../rtc_base:safe_minmax",
+        "../../rtc_base/experiments:field_trial_parser",
+        "../../rtc_base/synchronization:mutex",
+        "../../system_wrappers",
+        "../../system_wrappers:field_trial",
+    ]
+}
+

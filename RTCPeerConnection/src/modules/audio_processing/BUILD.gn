@@ -1,0 +1,43 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("audio_processing") {
+    deps = [
+        ":vad",
+    ]
+}
+
+
+rtc_sfu_source_set("vad") {
+    sources = [
+        "vad/common.h",
+        "vad/gmm.cc",
+        "vad/gmm.h",
+        "vad/noise_gmm_tables.h",
+        "vad/pitch_based_vad.cc",
+        "vad/pitch_based_vad.h",
+        "vad/pitch_internal.cc",
+        "vad/pitch_internal.h",
+        "vad/pole_zero_filter.cc",
+        "vad/pole_zero_filter.h",
+        "vad/standalone_vad.cc",
+        "vad/standalone_vad.h",
+        "vad/vad_audio_proc.cc",
+        "vad/vad_audio_proc.h",
+        "vad/vad_audio_proc_internal.h",
+        "vad/vad_circular_buffer.cc",
+        "vad/vad_circular_buffer.h",
+        "vad/voice_activity_detector.cc",
+        "vad/voice_activity_detector.h",
+        "vad/voice_gmm_tables.h",
+    ]    
+
+    deps = [
+        "../../audio:audio_frame_operations",
+        "../../common_audio",
+        "../../common_audio:vad",
+        "../../common_audio:third_party",
+        "../../rtc_base:checks",
+        "../audio_coding:isac_vad",
+    ]    
+}

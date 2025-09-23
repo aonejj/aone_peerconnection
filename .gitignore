@@ -1,0 +1,13 @@
+*.o
+*.txt
+dump
+*.sln
+*.suo
+*.vcxproj
+*.vcproj
+*.filters
+*.htm
+*.class
+*.ninja
+*.stamp
+out/

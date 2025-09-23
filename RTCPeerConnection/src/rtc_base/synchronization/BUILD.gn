@@ -1,0 +1,88 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("mutex_abseil") {
+    sources = [
+        "mutex_abseil.h",
+    ]
+  
+    deps = [
+        "..:macromagic",
+        "..:thread_annotations",
+    ]
+}
+
+rtc_sfu_source_set("mutex") {
+    sources = [
+        "mutex.cc",
+        "mutex.h",
+    ]
+  
+    deps = [
+        ":mutex_abseil",
+        ":mutex_critical_section",
+        ":mutex_pthread",
+        ":yield",
+        "..:checks",
+        "..:thread_annotations",
+    ]
+}
+
+rtc_sfu_source_set("mutex_critical_section") {
+    sources = [
+        "mutex_critical_section.h",
+    ]
+
+    deps = [
+        "..:thread_annotations",
+    ]
+}
+
+rtc_sfu_source_set("mutex_pthread") {
+    sources = [
+        "mutex_pthread.h",
+    ]
+
+    deps = [
+        "..:macromagic",
+        "..:thread_annotations",
+    ]
+}
+
+rtc_sfu_source_set("sequence_checker") {
+    sources = [
+        "sequence_checker.cc",
+        "sequence_checker.h",
+    ]
+  
+    deps = [
+        ":mutex",
+        "../../api/task_queue",
+        "..:platform_thread_types",
+        "..:thread_annotations",
+        "../system:rtc_export",
+        "..:stringutils",
+    ]
+}
+
+rtc_sfu_source_set("yield") {
+    sources = [
+        "yield.cc",
+        "yield.h",
+    ]
+
+    deps = [
+        "..:checks",
+    ]
+}
+
+rtc_sfu_source_set("yield_policy") {
+    sources = [
+        "yield_policy.cc",
+        "yield_policy.h",
+    ]
+
+    deps = [
+        "..:checks",
+    ]    
+}

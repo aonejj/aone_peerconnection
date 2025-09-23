@@ -1,0 +1,43 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("field_trial_parser") {
+    sources = [
+        "field_trial_parser.cc",
+        "field_trial_parser.h",
+        "field_trial_units.cc",
+        "field_trial_units.h",
+        "struct_parameters_parser.cc",
+        "struct_parameters_parser.h",
+    ]
+  
+    deps = [
+        "../../api/units:data_rate",
+        "../../api/units:data_size",
+        "../../api/units:time_delta",
+        "..:checks",
+        "..:logging",
+        "..:safe_conversions",
+        "..:stringutils",
+    ]
+}
+
+rtc_sfu_source_set("rate_control_settings") {
+    sources = [
+        "rate_control_settings.cc",
+        "rate_control_settings.h",
+    ]
+
+    deps = [
+        ":field_trial_parser",
+        "..:logging",
+        "..:safe_conversions",
+        "../../api/units:data_size",
+        "../../api/video_codecs:video_codecs_api",
+        "../../api/transport:webrtc_key_value_config",
+        "../../api/video_codecs:video_stream",
+        "../../system_wrappers:field_trial",
+        "../../../src_update/api:_video_codec",
+    ]
+
+}

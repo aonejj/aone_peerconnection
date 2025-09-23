@@ -1,0 +1,11 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("sent_packet") {
+    sources = [
+        "sent_packet.cc",
+        "sent_packet.h",
+    ]
+  
+    deps = [ "../system:rtc_export" ]
+}

@@ -1,0 +1,29 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+import("../../../rtc_peerconnection.gni")
+
+group("congestion_controller") {
+    deps = [
+        ":RembThrottler",
+        "goog_cc",
+        "rtp",
+        "../remote_bitrate_estimator",
+    ]
+}
+
+rtc_sfu_source_set("RembThrottler") {
+    sources = [
+        "remb_throttler.cc",
+        "remb_throttler.h",
+    ]
+
+    deps = [
+        "../../api/units:data_rate",
+        "../../api/units:data_size",
+        "../../api/units:time_delta",
+        "../../api/units:timestamp",
+        "../../rtc_base/synchronization:mutex",
+        "../remote_bitrate_estimator",
+    ]    
+}
+

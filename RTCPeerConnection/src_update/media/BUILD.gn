@@ -1,0 +1,108 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("media") {
+    deps = [
+        ":_media_channel",
+        ":_media_engine",
+        ":_webrtc_media_engine",
+        ":_webrtc_media_engine_info",
+    ]
+}
+
+
+rtc_sfu_source_set("_media_channel") {
+    sources = [
+        "base/_media_channel.cc",
+        "base/_media_channel.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src/api/video:RTCVideoPacketRouteSourceInterface",
+        "../../rtc_pc_src/api/audio:RTCAudioPacketRouteSourceInterface",
+        "../../src/api:rtc_error",
+        "../../src/api:rtp_parameters",
+        "../../src/api:media_types",
+        "../../src/api/video",
+        "../../src/api:audio_options",
+        "../../src/api/transport",
+        "../../src/api:call_api",
+        "../../src/api/video:video_rtp_headers",
+        "../../src/api/transport/rtp:rtp_source",
+        "../../src/common_video:quailty_limitation_reason",
+        "../../src/media/base:audio_source",
+        "../../src/media/base:media_config",
+        "../../src/media/base:stream_params",
+        "../../src/media/base:delayable",
+        "../../src/media/base:codec",
+        "../../src/modules/rtp_rtcp",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/rtc_base:socket",
+        "../../src/rtc_base:async_packet_socket",
+        "../../src/rtc_base:copy_on_write_buffer",
+        "../../src/rtc_base:network_route",
+        "../../src/rtc_base:thread_annotations",
+        "../../src/rtc_base/synchronization:mutex",
+        "../../src/rtc_base/third_party/sigslot",
+
+    ]
+}
+
+rtc_sfu_source_set("_media_engine") {
+    sources = [
+        "base/_media_engine.cc",
+        "base/_media_engine.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        ":_media_channel",
+        "../../src/api:rtc_error",
+        "../../src/api:rtp_parameters",  
+        "../../src/api:audio_options",
+        "../../src/api/crypto",     
+        "../../src/api/video:video_codec_constants", 
+        "../../src/api/video",
+        "../../src/media/base:media_config",
+        "../../src/media/base:stream_params",
+        "../../src/media/base:codec",        
+        "../../src/rtc_base:constructor_magic",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:stringutils",
+        "../../rtc_pc_src/call:RTCCall",   
+    ]
+}
+
+rtc_sfu_source_set("_webrtc_media_engine") {
+    sources = [
+        "engine/_webrtc_media_engine.cc",
+        "engine/_webrtc_media_engine.h",
+    ]
+
+    deps = [
+        ":_media_engine",
+        "../../src/media/base",
+        "../../src/media/base:codec",
+        "../../src/rtc_base/system:rtc_export",
+        "../../rtc_pc_src/media/engine:RTCWebRTCVideoEngine",
+        "../../rtc_pc_src/media/engine:RTCWebRTCVoiceEngine",
+    ]
+}
+
+rtc_sfu_source_set("_webrtc_media_engine_info") {
+    sources = [
+        "engine/_webrtc_media_engine_info.cc",
+        "engine/_webrtc_media_engine_info.h"
+    ]
+
+    deps = [
+        "../../src/api:rtp_parameters",
+        "../../src/api/transport",
+        "../../src/api:array_view",
+        "../../src/api/transport:bitrate_settings",
+        "../../src/media/base",
+        "../../src/media/base:codec",
+        "../../src/rtc_base:logging",
+    ]
+}

@@ -1,0 +1,30 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("congestion_controller") {
+    deps = [
+        ":RTCReceiveSideCongestionController",
+    ]
+}
+
+rtc_sfu_source_set("RTCReceiveSideCongestionController") {
+    sources = [
+        "RTCReceiveSideCongestionController.cc",
+        "include/RTCReceiveSideCongestionController.h",
+    ]
+
+    deps = [
+        "../feedback:RTCFeedbackPacketRouter",
+        "../remote_bitrate_estimator:RTCRemoteEstimatorProxy",
+        "../..:_deprecate_defines",
+        "../../../src/api:rtp_headers",
+        "../../../src/api:media_types",
+        "../../../src/api/units:time_delta",
+        "../../../src/modules/include:module",
+        "../../../src/modules/remote_bitrate_estimator",
+        "../../../src/modules/congestion_controller:RembThrottler",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base/synchronization:mutex",
+
+    ]
+}

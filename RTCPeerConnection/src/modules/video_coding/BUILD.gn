@@ -1,0 +1,32 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("video_coding") {
+    deps = [
+        ":histogram",
+    ]
+}
+
+rtc_sfu_source_set("histogram") {
+    sources = [
+        "histogram.cc",
+        "histogram.h",
+    ]
+
+    deps = [
+        "../../rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("codec_globals_headers") {
+    sources = [
+        "codecs/h264/include/h264_globals.h",
+        "codecs/interface/common_constants.h",
+        "codecs/vp8/include/vp8_globals.h",
+        "codecs/vp9/include/vp9_globals.h",
+    ]
+    
+    deps = [
+        "../../rtc_base:checks",
+    ]
+}

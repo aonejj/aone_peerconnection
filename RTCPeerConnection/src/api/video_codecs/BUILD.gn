@@ -1,0 +1,51 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("video_codecs") {
+    deps = [
+        ":video_codecs_api",
+        ":video_stream",        
+    ]
+}
+
+rtc_sfu_source_set("video_codecs_api") {
+    sources = [
+        "sdp_video_format.cc",
+        "sdp_video_format.h",
+        "spatial_layer.cc",
+        "spatial_layer.h",
+    ]
+
+    deps = [
+        "../units:data_rate",
+        "../video:encoded_image",
+        "../video:video_bitrate_allocation",
+        "../video:video_codec_constants", 
+        "../video:video_frame_type",
+        "../video:video_frame_marking",
+        "../video:video_rtp_headers",
+        "../../rtc_base:checks",
+        "../../rtc_base:logging",
+        "../../rtc_base:macromagic",
+        "../../rtc_base:ref_count",
+        "../../rtc_base:stringutils",
+        "../../rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("video_stream") {
+    sources = [
+        "video_encoder_config.cc",
+        "video_encoder_config.h",
+    ]
+
+    deps = [
+        ":video_codecs_api",
+        "..:scoped_refptr",
+        "../../../src_update/api:_video_codec",
+        "../../rtc_base:checks",
+        "../../rtc_base:stringutils",
+        "../../rtc_base:ref_count",
+        
+    ]
+}

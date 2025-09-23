@@ -1,0 +1,181 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("base") {
+    deps = [
+        ":audio_source",
+        ":codec",
+        ":delayable",
+        ":fake_rtp",
+        ":h264_profile_level_id",
+        ":media_config",
+        ":media_constants",
+        ":rid_description",
+        ":rtp_data_engine",
+        ":rtp_utils",
+        ":stream_params",
+        ":turn_utils",
+        ":vp9_profile",
+    ]
+}
+
+rtc_sfu_source_set("audio_source") {
+    sources = [
+        "audio_source.h",
+    ]
+}
+
+rtc_sfu_source_set("codec") {
+    sources = [
+        "codec.cc",
+        "codec.h",
+    ]
+
+    deps = [
+        ":media_constants",
+        ":h264_profile_level_id",
+        ":vp9_profile",
+        "../../api:rtp_parameters",
+        "../../api/video_codecs:video_codecs_api",
+        "../../rtc_base/system:rtc_export",
+        "../../rtc_base:checks",
+        "../../rtc_base:logging",
+        "../../rtc_base:stringutils",
+        "../../system_wrappers:field_trial"        
+    ]
+}
+
+rtc_sfu_source_set("delayable") {
+    sources = [
+        "delayable.h",
+    ]
+}
+
+rtc_sfu_source_set("fake_rtp") {
+    sources = [
+        "fake_rtp.cc",
+        "fake_rtp.h",
+    ]
+
+    deps = [
+        "../../rtc_base:checks",
+        "../../rtc_base:logging",        
+    ]
+}
+
+rtc_sfu_source_set("h264_profile_level_id") {
+    sources = [
+        "h264_profile_level_id.cc",
+        "h264_profile_level_id.h",
+    ]
+
+    deps = [
+        "../../rtc_base/system:rtc_export",
+        "../../rtc_base:macromagic",
+        "../../rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("media_config") {
+    sources = [
+        "media_config.h",
+    ]
+}
+
+rtc_sfu_source_set("media_constants") {
+    sources = [
+        "media_constants.cc",
+        "media_constants.h",
+    ]
+
+    deps = [
+        "../../rtc_base/system:rtc_export",
+    ]        
+}
+
+rtc_sfu_source_set("rid_description") {
+    sources = [
+        "rid_description.cc",
+        "rid_description.h",
+    ]
+}
+
+rtc_sfu_source_set("rtp_data_engine") {
+    sources = [
+        "rtp_data_engine.cc",
+        "rtp_data_engine.h",
+    ]
+
+    deps = [
+        ":codec",
+        ":media_constants",
+        ":rtp_utils",
+        ":stream_params",
+        "../../rtc_base:copy_on_write_buffer",
+        "../../rtc_base:data_rate_limiter",
+        "../../rtc_base:helpers",
+        "../../rtc_base:logging",
+        "../../rtc_base:sanitizer",
+        "../../../src_update/media:_media_channel",
+        "../../../src_update/media:_media_engine",
+    ]
+}
+
+rtc_sfu_source_set("rtp_utils") {
+    sources = [
+        "rtp_utils.cc",
+        "rtp_utils.h",
+    ]
+
+    deps = [
+        ":turn_utils",
+        "../../api:array_view",
+        "../../rtc_base:byte_order",
+        "../../rtc_base/system:rtc_export",
+        "../../rtc_base:async_packet_socket",
+        "../../rtc_base:checks",
+        "../../rtc_base:ssl",
+    ]
+}
+
+rtc_sfu_source_set("stream_params") {
+    sources = [
+        "stream_params.cc",
+        "stream_params.h",
+    ]
+
+    deps = [
+        ":rid_description",
+        "../../api:array_view",
+        "../../rtc_base:constructor_magic",
+        "../../rtc_base:logging",
+        "../../rtc_base:unique_id_generator",
+        "../../rtc_base:stringutils",
+    ]
+}
+
+rtc_sfu_source_set("turn_utils") {
+    sources = [
+        "turn_utils.cc",
+        "turn_utils.h",
+    ]
+
+    deps = [
+        "../../api/transport:stun_types",
+        "../../rtc_base/system:rtc_export",
+        "../../rtc_base:byte_order",     
+    ]
+}
+
+rtc_sfu_source_set("vp9_profile") {
+    sources = [
+        "vp9_profile.cc",
+        "vp9_profile.h",
+    ]
+
+    deps = [
+        "../../api/video_codecs:video_codecs_api",
+        "../../rtc_base/system:rtc_export",
+        "../../rtc_base:stringutils",
+    ]
+}

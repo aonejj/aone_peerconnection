@@ -1,0 +1,26 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("rtp_source") {
+    sources = [ 
+        "rtp_source.h",
+    ]
+
+    deps = [
+        "../../../api:rtp_headers",
+        "../../../api/units:time_delta",
+        "../../../api/units:timestamp",
+        "../../../rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("dependency_descriptor") {
+    sources = [
+        "dependency_descriptor.cc",
+        "dependency_descriptor.h",
+    ]
+
+    deps = [
+        "../../../rtc_base:checks",
+    ]    
+}

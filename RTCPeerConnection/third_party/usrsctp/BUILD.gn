@@ -1,0 +1,15 @@
+# Copyright (c) 2024 The AONE SFU project authors
+
+group("usrsctp") {
+    deps = [
+        ":usrsctp_copy_to_target"
+    ]
+}
+
+copy("usrsctp_copy_to_target") {
+    sources = [
+        "lib/libusrsctp.so",
+    ]
+
+    outputs = [ "$root_out_dir/{{source_file_part}}" ] 
+}

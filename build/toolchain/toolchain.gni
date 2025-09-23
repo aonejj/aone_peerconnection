@@ -1,0 +1,201 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+
+stamp_command = "touch {{output}}"
+stamp_description = "STAMP {{output}}"
+
+copy_command = "ln -f {{source}} {{output}} 2>/dev/null || (rm -rf {{output}} && cp -af {{source}} {{output}})"
+copy_description = "COPY {{source}} {{output}}"
+
+template("single_toolchain") {
+   toolchain(target_name) {
+    cc = invoker.cc
+    cxx = invoker.cxx
+    ld = invoker.ld
+    ar = invoker.ar
+
+    shlib_extension = ".so"
+
+    object_subdir = "{{target_out_dir}}/{{label_name}}"
+    default_executable_extension = ""
+    default_shlib_extension = shlib_extension
+    default_shlib_subdir = ""
+
+    if (defined(invoker.extra_ldflags) && invoker.extra_ldflags != "") {
+      extra_ldflags = " " + invoker.extra_ldflags
+    } else {
+      extra_ldflags = ""
+    }
+
+    tool("cc") {
+      depfile = "{{output}}.d"
+      precompiled_header_type = "gcc"
+
+      command = "$cc -MMD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_c}} -c {{source}} -o {{output}}"
+
+      depsformat = "gcc"
+      description = "CC {{output}}"
+      outputs = [ "$object_subdir/{{source_name_part}}.o" ]
+    }
+
+    tool("cxx") {
+      depfile = "{{output}}.d"
+      precompiled_header_type = "gcc"
+
+      command = "$cxx -MMD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}} -c {{source}} -o {{output}}"
+
+      depsformat = "gcc"
+      description = "CXX {{output}}"
+      outputs = [ "$object_subdir/{{source_name_part}}.o" ]
+    }
+
+    tool("alink") {
+      rspfile = "{{output}}.rsp"
+      rspfile_content = "{{inputs}}"
+      command = "rm -f {{output}}"
+      command += " && \"$ar\" {{arflags}} -r -c -s -D {{output}} @\"$rspfile\""
+
+      description = "AR {{output}}"
+      outputs = [ "{{output_dir}}/{{target_output_name}}{{output_extension}}" ]
+
+      default_output_dir = "{{target_out_dir}}"
+      default_output_extension = ".a"
+      output_prefix = "lib"
+    }
+
+    tool("solink") {
+      soname = "{{target_output_name}}{{output_extension}}"  # e.g. "libfoo.so".
+      sofile = "{{output_dir}}/$soname"  # Possibly including toolchain dir.
+      rspfile = sofile + ".rsp"
+
+
+      if (!is_debug) {
+        unstripped_sofile = "{{output_dir}}/lib.unstripped/$soname"
+      } else {
+        unstripped_sofile = sofile
+      }
+      
+      soname_flag = "-Wl,-soname=\"$soname\""
+      
+      command = "$ld -shared $soname_flag {{ldflags}}${extra_ldflags} -o \"$unstripped_sofile\" @\"$rspfile\" {{rlibs}}"
+
+        if(!is_debug) {
+        command += " && strip --strip-all \"$unstripped_sofile\" -o \"$sofile\""
+      }
+
+      rspfile_content = "-Wl,--whole-archive {{inputs}} {{solibs}} -Wl,--no-whole-archive {{libs}}"
+      description = "SOLINK $sofile"
+
+      default_output_extension = default_shlib_extension
+
+      default_output_dir = "{{root_out_dir}}${default_shlib_subdir}"
+
+      output_prefix = "lib"
+
+      outputs = [
+        sofile,
+      ]
+      
+      if (sofile != unstripped_sofile) {
+        outputs += [ unstripped_sofile ]
+      }
+    }
+
+    tool("solink_module") {
+      soname = "{{target_output_name}}{{output_extension}}"  # e.g. "libfoo.so".
+      sofile = "{{output_dir}}/$soname"
+      rspfile = sofile + ".rsp"
+
+      if (!is_debug) {
+        unstripped_sofile = "{{root_out_dir}}/lib.unstripped/$soname"
+      } else {
+        unstripped_sofile = sofile
+      }
+
+      soname_flag = "-Wl,-soname=\"$soname\""
+      whole_archive_flag = "-Wl,--whole-archive"
+      no_whole_archive_flag = "-Wl,--no-whole-archive"
+
+      command = "$ld -shared {{ldflags}}${extra_ldflags} -o \"$unstripped_sofile\" $soname_flag @\"$rspfile\""
+
+      if (!is_debug) {
+        command += " && strip --strip-all \"$unstripped_sofile\" -o \"$sofile\""
+      }
+
+      rspfile_content = "$whole_archive_flag {{inputs}} {{solibs}} $no_whole_archive_flag {{libs}} {{rlibs}}"
+
+      description = "SOLINK_MODULE $sofile"
+      default_output_extension = default_shlib_extension
+      default_output_dir = "{{root_out_dir}}${default_shlib_subdir}"
+      output_prefix = "lib"
+
+      outputs = [
+        sofile,
+      ]
+      
+      if (sofile != unstripped_sofile) {
+        outputs += [ unstripped_sofile ]
+      }      
+    }    
+
+    tool("link") {
+      exename = "{{target_output_name}}{{output_extension}}"
+      outfile = "{{output_dir}}/$exename"
+      rspfile = "$outfile.rsp"
+      unstripped_outfile = outfile
+
+      default_output_extension = default_executable_extension
+      default_output_dir = "{{root_out_dir}}"
+      if (defined(invoker.strip)) {
+        unstripped_outfile = "{{root_out_dir}}/exe.unstripped/$exename"
+      }
+
+      start_group_flag = "-Wl,--start-group"
+      end_group_flag = "-Wl,--end-group "
+
+      command = "$ld {{ldflags}} -o \"$unstripped_outfile\" $start_group_flag @\"$rspfile\" {{solibs}} $end_group_flag {{libs}} {{rlibs}}"
+
+      # 수정해야함 webrtc gni 처럼
+      if(defined(invoker.strip)) {
+        command += " && strip --strip-sections \"$unstripped_outfile\" \"$outfile\""
+      }
+
+      description = "LINK $outfile"
+      rspfile_content = "{{inputs}}"
+      outputs = [ outfile ]
+      if (outfile != unstripped_outfile) {
+        outputs += [ unstripped_outfile ]
+      }
+    }
+
+    tool("stamp") {
+      command = stamp_command
+      description = stamp_description
+    }
+
+    tool("copy") {
+      command = copy_command
+      description = copy_description
+    }    
+  }
+}
+
+template("clang_toolchain") {
+  single_toolchain(target_name) {
+    forward_variables_from(invoker,
+                           "*",
+                           [
+                             "visibility",
+                           ])
+  }
+}
+
+template("gcc_toolchain") {
+  single_toolchain(target_name) {
+    forward_variables_from(invoker,
+                           "*",
+                           [
+                             "visibility",
+                           ])
+  }
+}

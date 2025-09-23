@@ -1,0 +1,106 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("transport") {
+  deps = [
+    ":bitrate_settings",
+    ":enums",
+    ":network_control",
+    ":webrtc_key_value_config",
+    ":data_channel_transport_interface",
+    ":sctp_transport_factory_interface",
+    ":goog_cc",
+    ":stun_types",
+    "rtp:rtp_source",    
+  ]
+}
+
+rtc_sfu_source_set("bitrate_settings") {
+    sources = [
+        "bitrate_settings.cc",
+        "bitrate_settings.h",
+    ]
+
+    deps = [ "../../rtc_base/system:rtc_export" ]
+}
+
+rtc_sfu_source_set("enums") {
+    sources = [
+        "enums.h",
+    ]
+}
+
+rtc_sfu_source_set("network_control") {
+    sources = [
+        "network_control.h",
+        "network_types.cc",
+        "network_types.h",
+    ]
+
+    deps = [
+      "../rtc_event_log",
+      "../units:data_rate",
+      "../units:data_size",
+      "../units:time_delta",
+      "../units:timestamp",
+      "../../rtc_base:deprecation",
+    ]    
+}
+
+rtc_sfu_source_set("webrtc_key_value_config") {
+    sources = [
+        "webrtc_key_value_config.h",
+    ]
+
+    deps = [ "../../rtc_base/system:rtc_export" ]
+}
+
+rtc_sfu_source_set("data_channel_transport_interface") {
+    sources = [
+        "data_channel_transport_interface.h",
+    ]
+
+    deps = [
+        "..:array_view",
+        "..:rtc_error",
+        "../../rtc_base:copy_on_write_buffer",
+    ] 
+}
+
+rtc_sfu_source_set("goog_cc") {
+  sources = [
+    "goog_cc_factory.cc",
+    "goog_cc_factory.h",
+  ]
+
+  deps = [
+    ":network_control",
+    "../../api:network_state_predictor",
+    "../../modules/congestion_controller/goog_cc",
+    "../../rtc_base:deprecation",
+    "../../rtc_base:logging",
+  ]    
+}
+
+rtc_sfu_source_set("sctp_transport_factory_interface") {
+  sources = [ "sctp_transport_factory_interface.h" ]
+}
+
+rtc_sfu_source_set("stun_types") {
+  sources = [
+    "stun.cc",
+    "stun.h",
+  ]
+
+  deps = [
+    "..:array_view",
+    "../../rtc_base:byte_buffer",
+    "../../rtc_base:ip_address",
+    "../../rtc_base:socket_address",
+    "../../rtc_base:byte_order",
+    "../../rtc_base:checks",
+    "../../rtc_base:crc32",
+    "../../rtc_base:logging",
+    "../../rtc_base:ssl",
+  ]
+}

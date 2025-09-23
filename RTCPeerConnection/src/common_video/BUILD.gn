@@ -1,0 +1,60 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("common_video") {
+    deps = [
+        ":frame_counts",
+        ":generic_frame_info",
+        ":quailty_limitation_reason",
+        ":h264",
+    ]
+}
+
+rtc_sfu_source_set("frame_counts") {
+    sources = [
+        "frame_counts.h",
+    ]
+}
+
+rtc_sfu_source_set("generic_frame_info") {
+    sources = [
+        "generic_frame_descriptor/generic_frame_info.cc",
+        "generic_frame_descriptor/generic_frame_info.h"
+    ]
+
+    deps = [
+        "../api:array_view",
+        "../api/video:video_codec_constants",
+        "../rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("quailty_limitation_reason") {
+    sources = [
+        "include/quality_limitation_reason.h",
+    ]
+}
+
+rtc_sfu_source_set("h264") {
+    sources = [
+        "h264/h264_common.cc",
+        "h264/h264_common.h",
+        "h264/pps_parser.cc",
+        "h264/pps_parser.h",
+        "h264/sps_parser.cc",
+        "h264/sps_parser.h",
+        "h264/sps_vui_rewriter.cc",
+        "h264/sps_vui_rewriter.h",
+    ]
+
+    deps = [
+        "../api/video:video_rtp_headers",
+        "../rtc_base:checks",
+        "../rtc_base:buffer",
+        "../rtc_base:bit_buffer",
+        "../rtc_base:logging",
+        "../rtc_base:numerics",
+        "../rtc_base:safe_minmax",
+        "../system_wrappers",
+    ]
+}

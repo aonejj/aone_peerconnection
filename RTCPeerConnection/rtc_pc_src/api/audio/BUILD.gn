@@ -1,0 +1,52 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("RTCAudioOutputProxy") {
+    sources = [
+        "RTCAudioOutputProxy.h",
+    ]
+
+    deps = [
+        "../../../src/api/audio:audio_frame",
+        "../../../src/rtc_base:ref_count",
+    ]
+}
+
+
+rtc_sfu_source_set("RTCAudioPacketRouteSourceInterface") {
+    sources = [
+        "RTCAudioPacketRouteSourceInterface.h",
+    ]
+
+    deps = [
+        "..:_rtc_media_stream_interface",
+        "..:RTCPacketRouteSinkInterface",
+        "../../../src/api:notifier",
+    ]
+}
+
+rtc_sfu_source_set("RTCAudioRtpPacketListenSinkInterface") {
+    sources = [
+        "RTCAudioRtpPacketListenSinkInterface.h",
+    ]
+
+    deps = [
+        "../../../src/call:rtp_packet_sink_interface",
+    ]
+}
+
+rtc_sfu_source_set("RTCAudioRtpPacketListenerProxy") {
+    sources = [
+        "RTCAudioRtpPacketListenerProxy.cc",
+        "RTCAudioRtpPacketListenerProxy.h",
+    ]
+
+    deps = [
+        ":RTCAudioRtpPacketListenSinkInterface",
+        "..:RTCReceivedPacketSinks",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base/synchronization:mutex",        
+    ]
+}

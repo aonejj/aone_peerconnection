@@ -1,0 +1,23 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+group("src") {
+    deps = [
+        "api",
+        "audio",
+        "base",
+        "build",
+        "call",
+        "common_audio",
+        "common_video",
+        "logging",
+        "media",
+        "modules",
+        "p2p",
+        "pc",
+        "rtc_base",
+        "system_wrappers",
+        "test",
+        "third_party/libsrtp",
+        "video",
+    ]
+}

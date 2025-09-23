@@ -1,0 +1,25 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("flat_containers_internal") {
+    sources = [
+        "flat_tree.cc",
+        "flat_tree.h",
+        "identity.h",
+        "invoke.h",
+        "move_only_int.h",
+    ]
+
+    deps = [
+        "..:checks",
+        "../system:no_unique_address",
+    ]
+}
+
+rtc_sfu_source_set("flat_map") {
+    sources = [ "flat_map.h" ]
+    deps = [
+        ":flat_containers_internal",
+        "..:checks",
+    ]
+}

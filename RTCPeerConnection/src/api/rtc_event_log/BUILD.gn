@@ -1,0 +1,18 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("rtc_event_log") {
+    sources = [
+        "rtc_event_log.cc",
+        "rtc_event_log.h",
+        "rtc_event.cc",
+        "rtc_event.h"
+    ]
+
+    deps = [
+        "..:rtc_event_log_output",
+        "../task_queue",
+        "../../rtc_base:checks",
+        "../../rtc_base:time_utils",
+    ]
+}

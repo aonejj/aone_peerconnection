@@ -1,0 +1,1513 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("rtc_base") {
+    deps = [
+        ":macromagic",
+        ":async_invoker",
+        ":async_packet_socket",
+        ":async_resolver_interface",
+        ":audio_format_to_string",
+        ":threading",
+        ":async_socket",
+        ":async_tcp_socket",
+        ":async_udp_socket",
+        ":bind",
+        ":bit_buffer",
+        ":bitrate_tracker",
+        ":buffer_queue",
+        ":buffer",
+        ":byte_buffer",
+        ":byte_order",
+        ":callback_list",
+        ":callback",
+        ":checks",
+        ":compile_assert_c",
+        ":constructor_magic",
+        ":copy_on_write_buffer",
+        ":crc32",
+        ":crypt_string",
+        ":data_rate_limiter",
+        ":deprecation",
+        ":dscp",
+        ":divide_round",
+        ":event",
+#        ":fake_clock",              # for test
+#        ":fake_mdns_responder",     # for test
+#        ":fake_network",            # for test
+#        ":fake_ssl_identity",       # for test
+#        ":firewall_socket_server",  # for test
+        ":format_macros",
+#        ":gunit",                   # for test
+        ":helpers",
+        ":http_common",
+        ":ifaddrs_converter",
+        ":ignore_wundef",
+        ":ip_address",
+        ":location",
+        ":logging",
+        ":mdns_responder_interface",
+        ":mod_ops",
+#        ":nat_server",
+        ":nat_types",
+        ":net_helper",
+        ":net_helpers",
+        ":network",
+        ":network_constants",
+        ":network_route",
+        ":null_socket_server",
+        ":numerics",
+        ":operations_chain",
+        ":platform_thread",
+        ":platform_thread_types",
+        ":proxy_info",
+#        ":proxy_server",
+        ":race_checker",
+        ":random",
+        ":rate_limiter",
+        ":rate_statistics",
+        ":rate_tracker",
+        ":ref_count",
+        ":rtc_certificate_generator",
+        ":sanitizer",
+        ":safe_compare",
+        ":safe_conversions",
+        ":safe_minmax",
+        ":server_socket_adapters",
+        ":socket",
+        ":socket_adapters",
+        ":socket_address",
+        ":socket_address_pair",
+        ":socket_factory",
+        ":socket_server",
+        ":ssl",        
+        ":stream",
+        ":stringutils",
+        ":task_queue",
+        ":task_queue_stdlib",
+#        ":test_client",             # for test
+#        ":test_echo_server",        # for test
+#        ":test_utils",              # for test
+        ":thread_checker",
+        ":time_utils",
+        ":type_traits",
+        ":unique_id_generator",
+        ":untyped_function",
+#        ":virtual_socket_server",
+        ":weak_ptr",
+        ":zero_memory",
+    ]
+}
+
+rtc_sfu_source_set("macromagic") {
+    sources = [
+        "arraysize.h",
+    ]
+
+    deps = [ 
+        "system:arch",
+        ":thread_annotations",
+    ]
+}
+
+rtc_sfu_source_set("async_invoker") {
+    sources = [
+        "async_invoker.cc",
+        "async_invoker_inl.h",
+        "async_invoker.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        ":constructor_magic",
+        ":checks",
+        ":event",
+        ":logging",
+        ":ref_count",
+        ":threading",
+        ":thread_annotations",
+        "third_party/sigslot",
+        "../api:scoped_refptr",
+    ]
+}
+
+rtc_sfu_source_set("async_packet_socket") {
+    sources = [
+        "async_packet_socket.cc",
+        "async_packet_socket.h",
+    ]
+
+    deps = [
+        ":callback_list",
+        ":constructor_magic",
+        ":dscp",
+        ":socket",
+        ":time_utils",
+        "synchronization:sequence_checker",
+        "network:sent_packet",
+        "system:no_unique_address",
+        "system:rtc_export",
+        "third_party/sigslot",
+    ]    
+}
+
+rtc_sfu_source_set("async_resolver_interface") {
+    sources = [
+        "async_resolver_interface.cc",
+        "async_resolver_interface.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":socket_address",
+        "system:rtc_export",
+        "third_party/sigslot",
+    ]    
+}
+
+rtc_sfu_source_set("audio_format_to_string") {
+    sources = [
+        "strings/audio_format_to_string.cc",
+        "strings/audio_format_to_string.h",        
+    ]
+
+    deps = [
+        ":stringutils",
+        "../api/audio_codecs",
+    ]    
+}
+
+rtc_sfu_source_set("threading") {
+    sources = [
+        "async_resolver.cc",
+        "async_resolver.h",
+        "internal/default_socket_server.cc",
+        "internal/default_socket_server.h",
+        "physical_socket_server.cc",
+        "physical_socket_server.h",
+        "thread.cc",
+        "thread.h",
+
+        "message_handler.cc",
+        "message_handler.h", 
+        "thread_message.h",       
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        "../../rtc_pc_src:RTCInvocableMessageHandler",
+        ":async_resolver_interface",
+        ":byte_order",
+        ":checks",
+        ":constructor_magic",
+        ":criticalsection",
+        ":event",
+        ":ip_address",
+        ":logging",
+        ":location",
+        ":macromagic",
+        ":network_constants",
+        ":network_monitor",
+        ":network_monitor_factory",
+        ":null_socket_server",
+        ":platform_thread",
+        ":platform_thread_types",
+        ":ref_count",
+        ":socket_address",
+        ":socket_server",
+        ":time_utils",
+        ":thread_annotations",
+        ":task_queue",
+        "../api:function_view",
+        "../api:refcountedbase",
+        "../api:scoped_refptr",
+        "../api/task_queue",
+        "../api/units:time_delta",
+        "../system_wrappers:field_trial",
+        "synchronization:sequence_checker",        
+        "synchronization:mutex",
+        "system:no_unique_address",
+        "system:rtc_export",
+        "third_party/sigslot",
+        "task_utils:pending_task_safety_flag",
+    ]    
+}
+
+rtc_sfu_source_set("async_socket") {
+    sources = [
+        "async_socket.cc",
+        "async_socket.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":socket",
+        ":socket_address",
+        "third_party/sigslot",
+    ]    
+}
+
+rtc_sfu_source_set("async_tcp_socket") {
+    sources = [
+        "async_tcp_socket.cc",
+        "async_tcp_socket.h",
+    ]
+
+    deps = [
+        ":async_socket",
+        ":async_packet_socket",
+        ":buffer",
+        ":byte_order",
+        ":checks",
+        ":constructor_magic",
+        ":logging",
+        ":socket",
+        ":socket_address",
+        ":time_utils",
+        "third_party/sigslot",
+        "../api:array_view",
+        "network:sent_packet",
+  ]    
+}
+
+rtc_sfu_source_set("async_udp_socket") {
+    sources = [
+        "async_udp_socket.cc",
+        "async_udp_socket.h",
+    ]
+
+    deps = [
+        ":async_socket",
+        ":async_packet_socket",
+        ":checks",
+        ":logging",
+        ":macromagic",
+        ":socket",
+        ":socket_address",
+        ":socket_factory",
+        ":time_utils",
+        "third_party/sigslot",
+        "synchronization:sequence_checker",
+        "../system_wrappers:field_trial",
+        "network:sent_packet",
+        "system:no_unique_address",
+        "../../rtc_pc_src:_deprecate_defines",
+    ]    
+}
+
+rtc_sfu_source_set("bind") {
+    sources = [
+        "bind.h",
+    ]
+
+    deps = [
+        "../api:scoped_refptr",
+    ]
+}
+
+rtc_sfu_source_set("bit_buffer") {
+    sources = [
+        "bit_buffer.cc",
+        "bit_buffer.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":constructor_magic",
+        "../api/units:data_size",
+    ]    
+}
+
+rtc_sfu_source_set("bitrate_tracker") {
+    sources = [
+        "bitrate_tracker.cc",
+        "bitrate_tracker.h",
+    ]
+
+    deps = [
+        ":rate_statistics",
+        "../api/units:data_size",
+        "../api/units:data_rate",
+        "../api/units:time_delta",
+        "../api/units:timestamp",
+        "system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("buffer_queue") {
+    sources = [
+        "buffer_queue.cc",
+        "buffer_queue.h",
+    ]
+
+    deps = [
+        ":buffer",
+        ":constructor_magic",
+        ":macromagic",
+        ":thread_annotations",
+        "synchronization:sequence_checker",
+        "system:no_unique_address",
+    ]    
+}
+
+rtc_sfu_source_set("buffer") {
+    sources = [
+        "buffer.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":type_traits",
+        ":zero_memory",
+        "../api:array_view",
+    ]    
+}
+
+rtc_sfu_source_set("byte_buffer") {
+    sources = [
+        "byte_buffer.cc",
+        "byte_buffer.h",
+    ]
+
+    deps = [
+        ":buffer",
+        ":byte_order",
+        ":constructor_magic",
+    ]    
+}
+
+rtc_sfu_source_set("byte_order") {
+    sources = [
+        "byte_order.h",
+    ]
+
+    deps = [ "system:arch" ]
+}
+
+rtc_sfu_source_set("callback_list") {
+    sources = [
+        "callback_list.cc",
+        "callback_list.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":untyped_function",
+        "../api:function_view",
+        "system:assume",
+        "system:inline",
+        "system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("callback") {
+    sources = [
+        "callback.h",
+    ]
+
+    deps = [
+        ":ref_count",
+        "../api:scoped_refptr",
+    ]
+}
+
+rtc_sfu_source_set("checks") {
+    sources = [
+        "checks.cc",
+        "checks.h",
+    ]
+
+    deps = [
+        ":safe_compare",
+        "../api:scoped_refptr",
+        "system:inline",
+        "system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("compile_assert_c") {
+    sources = [
+        "compile_assert_c.h",
+    ]
+}
+
+rtc_sfu_source_set("constructor_magic") {
+    sources = [
+        "constructor_magic.h",
+    ]
+}
+
+rtc_sfu_source_set("copy_on_write_buffer") {
+    sources = [
+        "copy_on_write_buffer.cc",
+        "copy_on_write_buffer.h",
+    ]
+
+    deps = [
+        ":buffer",
+        ":checks",
+        ":ref_count",
+        ":type_traits",
+        "../api:scoped_refptr",
+        "system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("crc32") {
+    sources = [
+        "crc32.cc",
+        "crc32.h",
+    ]
+
+    deps = [ ":macromagic" ]
+}
+
+rtc_sfu_source_set("criticalsection") {
+    sources = [
+        "deprecated/recursive_critical_section.cc",
+        "deprecated/recursive_critical_section.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":constructor_magic",
+        ":macromagic",
+        ":platform_thread_types",
+        ":thread_annotations",
+        "synchronization:yield",
+        "system:unused",
+    ]
+}
+
+rtc_sfu_source_set("crypt_string") {
+    sources = [
+        "crypt_string.cc",
+        "crypt_string.h",
+    ]
+}
+
+rtc_sfu_source_set("data_rate_limiter") {
+    sources = [
+        "data_rate_limiter.cc",
+        "data_rate_limiter.h",
+    ]
+
+    deps = [ "system:rtc_export" ]
+}
+
+rtc_sfu_source_set("deprecation") {
+    sources = [
+        "deprecation.h",
+    ]
+}
+
+rtc_sfu_source_set("dscp") {
+    sources = [
+        "dscp.h",
+    ]
+}
+
+rtc_sfu_source_set("divide_round") {
+    sources = [
+        "numerics/divide_round.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":safe_compare",
+    ]
+}
+
+rtc_sfu_source_set("event") {
+    sources = [
+        "event.cc",
+        "event.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":time_utils",
+        "../api/units:time_delta",
+        "synchronization:yield_policy",
+    ]
+}
+
+#rtc_sfu_source_set("fake_clock") {
+#    sources = [
+#        "fake_clock.cc",
+#        "fake_clock.h",
+#    ]
+
+#   deps = [
+#        ":checks",
+#        "synchronization:mutex",
+#        ":macromagic",
+#        ":time_utils",
+#        ":threading",
+#        ":thread_annotations",
+#        "../api/units:time_delta",
+#        "../api/units:timestamp",
+#    ]
+#}
+
+#rtc_sfu_source_set("fake_mdns_responder") {
+#    sources = [
+#        "fake_mdns_responder.h",
+#    ]
+
+#    deps = [
+#        ":async_invoker",
+#        ":ip_address",
+#        ":location",
+#        ":mdns_responder_interface",
+#        ":threading",
+#    ]
+#}
+
+#rtc_sfu_source_set("fake_network") {
+#    sources = [
+#        "fake_network.h",
+#    ]
+
+#    deps = [
+#        ":checks",
+#        ":mdns_responder_interface",
+#        ":network",
+#        ":socket_address",
+#        ":stringutils",
+#        ":threading",
+#        ":logging",
+#    ]
+#}
+
+#rtc_sfu_source_set("fake_ssl_identity") {
+#    sources = [
+#        "fake_ssl_identity.cc",
+#        "fake_ssl_identity.h",
+#    ]
+
+#    deps = [
+#        ":checks",
+#        ":ssl",
+#    ]
+#}
+
+#rtc_sfu_source_set("firewall_socket_server") {
+#    sources = [
+#        "firewall_socket_server.cc",
+#        "firewall_socket_server.h",
+#    ]
+
+#    deps = [
+#        ":async_socket",
+#        ":checks",
+#        ":logging",
+#        ":ip_address",
+#        ":socket",
+#        ":socket_address",
+#        ":socket_server",
+#        "synchronization:mutex",
+#    ]
+#}
+
+rtc_sfu_source_set("format_macros") {
+    sources = [
+        "format_macros.h",
+    ]
+
+    deps = [
+        "system:arch",
+    ]
+}
+
+#rtc_sfu_source_set("gunit") {
+#    sources = [
+#        "gunit.cc",
+#        "gunit.h",
+#    ]
+
+#    deps = [
+#        ":checks",
+#        ":fake_clock",
+#        ":logging",
+#        ":threading",
+#        "system:arch",
+#    ]
+#}
+
+rtc_sfu_source_set("helpers") {
+    sources = [
+        "helpers.cc",
+        "helpers.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":logging",
+        "system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("http_common") {
+    sources = [
+        "http_common.cc",
+        "http_common.h",
+    ]
+
+    deps = [
+        ":crypt_string",
+        ":logging",
+        ":socket_address",
+        ":ssl",
+        ":stringutils",
+        ":zero_memory",
+        "third_party/base64",
+    ]    
+}
+
+rtc_sfu_source_set("ifaddrs_converter") {
+    sources = [
+        "ifaddrs_converter.cc",
+        "ifaddrs_converter.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":ip_address",
+        ":logging",
+    ]    
+}
+
+rtc_sfu_source_set("ignore_wundef") {
+    sources = [
+        "ignore_wundef.h",
+    ]
+}
+
+rtc_sfu_source_set("ip_address") {
+    sources = [
+        "ip_address.cc",
+        "ip_address.h",
+    ]
+
+    deps = [
+        ":byte_order",
+        ":net_helpers",
+        ":stringutils",
+        "system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("location") {
+    sources = [
+        "location.cc",
+        "location.h",
+    ]
+
+    deps = [ "system:rtc_export", ]
+}
+
+rtc_sfu_source_set("logging") {
+    sources = [
+        "logging.cc",
+        "logging.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":constructor_magic",
+        ":deprecation",
+        ":macromagic",
+        ":platform_thread_types",
+        ":stringutils",
+        ":time_utils",
+        ":thread_annotations",
+        "../api/units:timestamp",
+        "synchronization:mutex",
+        "system:inline",
+    ]    
+}
+
+rtc_sfu_source_set("mdns_responder_interface") {
+    sources = [
+        "mdns_responder_interface.h",
+    ]
+
+    deps = [ ":ip_address" ]
+}
+
+rtc_sfu_source_set("mod_ops") {
+    sources = [ "numerics/mod_ops.h" ]
+    deps = [ ":checks" ]
+}
+
+#rtc_sfu_source_set("nat_server") {
+#    sources = [
+#        "nat_server.cc",
+#        "nat_server.h",
+#        "nat_socket_factory.cc",
+#        "nat_socket_factory.h",        
+#    ]
+
+#    deps = [
+#        ":async_socket",
+#        ":async_udp_socket",
+#        ":checks",
+#        ":constructor_magic",
+#        ":logging",
+#        ":macromagic",
+#        ":nat_types",
+#        ":socket",
+#        ":socket_address",  
+#        ":socket_server",      
+#        ":proxy_server",
+#        ":socket_adapters",
+#        ":socket_address_pair",
+#        ":socket_factory",
+#        "synchronization:mutex",
+#        ":threading",
+#       ":virtual_socket_server", 
+#    ]
+#}
+
+rtc_sfu_source_set("nat_types") {
+    sources = [
+        "nat_types.cc",
+        "nat_types.h",
+    ]
+
+    deps = [
+        ":checks",
+    ]
+}
+
+rtc_sfu_source_set("net_helper") {
+    sources = [
+        "net_helper.cc",
+        "net_helper.h",
+    ]
+}
+
+rtc_sfu_source_set("net_helpers") {
+    sources = [
+        "net_helpers.cc",
+        "net_helpers.h",
+    ]
+}
+
+rtc_sfu_source_set("network") {
+    sources = [
+        "network.cc",
+        "network.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        ":checks",
+        ":ip_address",
+        ":ifaddrs_converter",
+        ":logging",
+        ":mdns_responder_interface",
+        ":network_monitor",
+        ":network_monitor_factory",
+        ":socket",
+        ":stringutils",
+        "synchronization:sequence_checker",
+        "system:rtc_export",
+        ":thread_annotations",
+        ":threading",
+        "third_party/sigslot",
+        ":macromagic",
+        "experiments:field_trial_parser",
+        "task_utils:pending_task_safety_flag",
+        "../system_wrappers:field_trial",
+    ]
+}
+
+rtc_sfu_source_set("network_monitor") {
+    sources = [
+        "network_monitor.cc",
+        "network_monitor.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":network_constants",
+        "third_party/sigslot",
+    ]
+}
+
+rtc_sfu_source_set("network_monitor_factory") {
+    sources = [
+        "network_monitor_factory.cc",
+        "network_monitor_factory.h",
+    ]
+
+    deps = [
+        ":checks",
+    ]
+}
+
+rtc_sfu_source_set("network_constants") {
+    sources = [
+        "network_constants.cc",
+        "network_constants.h",
+    ]
+
+    deps = [
+        ":checks",
+    ]
+}
+
+rtc_sfu_source_set("network_route") {
+    sources = [
+        "network_route.cc",
+        "network_route.h",
+    ]
+
+    deps = [
+        ":network_constants",
+        ":stringutils",
+        "system:inline",
+    ]    
+}
+
+rtc_sfu_source_set("null_socket_server") {
+    sources = [
+        "null_socket_server.cc",
+        "null_socket_server.h",
+    ]
+
+    deps = [
+        ":async_socket",
+        ":checks",
+        ":event",
+        ":logging",
+        ":socket",
+        ":socket_server",
+        "../api/units:time_delta",
+        "system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("numerics") {
+    sources = [
+        "numerics/event_based_exponential_moving_average.cc",
+        "numerics/event_based_exponential_moving_average.h",
+        "numerics/exp_filter.cc",
+        "numerics/exp_filter.h",
+        "numerics/moving_median_filter.h",
+        "numerics/percentile_filter.h",
+        "numerics/sequence_number_util.h",        
+    ]
+
+    deps = [
+        ":checks",
+        ":constructor_magic",
+        ":mod_ops",
+    ]    
+}
+
+rtc_sfu_source_set("operations_chain") {
+    sources = [
+        "operations_chain.cc",
+        "operations_chain.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":constructor_magic",
+        ":macromagic",
+        ":ref_count",
+        "../api:make_ref_counted",
+        "../api:refcountedbase",
+        "../api:scoped_refptr",
+        "synchronization:sequence_checker",
+        "system:no_unique_address",
+    ]    
+}
+
+rtc_sfu_source_set("platform_thread") {
+    sources = [
+        "platform_thread.cc",
+        "platform_thread.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":macromagic",
+        ":platform_thread_types",
+        ":time_utils",
+        "synchronization:sequence_checker",
+    ]    
+}
+
+rtc_sfu_source_set("platform_thread_types") {
+    sources = [
+        "platform_thread_types.cc",
+        "platform_thread_types.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":macromagic",
+    ]    
+}
+
+rtc_sfu_source_set("proxy_info") {
+    sources = [
+        "proxy_info.cc",
+        "proxy_info.h",
+    ]
+
+    deps = [
+        ":crypt_string",
+        ":socket_address",
+    ]    
+}
+
+#rtc_sfu_source_set("proxy_server") {
+#    sources = [
+#        "proxy_server.cc",
+#        "proxy_server.h",
+#    ]
+
+#    deps = [
+#        ":async_socket",
+#        ":checks",
+#        ":constructor_magic",
+#        ":logging",
+#        ":server_socket_adapters",
+#        ":socket_address",
+#        ":socket_factory",
+#        "memory:fifo_buffer",
+#    ]
+#}
+
+rtc_sfu_source_set("race_checker") {
+    sources = [
+        "race_checker.cc",
+        "race_checker.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":platform_thread_types",
+        ":thread_annotations",
+    ]
+}
+
+rtc_sfu_source_set("random") {
+    sources = [
+        "random.cc",
+        "random.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":constructor_magic",
+        ":safe_conversions",
+    ]    
+}
+
+rtc_sfu_source_set("rate_limiter") {
+    sources = [
+        "rate_limiter.cc",
+        "rate_limiter.h",
+    ]
+
+    deps = [
+        ":rate_statistics",
+        "../system_wrappers",
+        "synchronization:mutex",
+        ":thread_annotations",
+    ]
+}
+
+rtc_sfu_source_set("rate_statistics") {
+    sources = [
+        "rate_statistics.cc",
+        "rate_statistics.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":logging",
+        ":safe_conversions",
+        "system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("rate_tracker") {
+    sources = [
+        "rate_tracker.cc",
+        "rate_tracker.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":time_utils",
+    ]
+}
+
+rtc_sfu_source_set("ref_count") {
+    sources = [
+        "ref_count.h",
+        "ref_counted_object.h",
+        "ref_counter.h",
+    ]
+
+    deps = [
+        ":constructor_magic",
+    ]
+}
+
+rtc_sfu_source_set("rtc_certificate_generator") {
+    sources = [
+        "rtc_certificate_generator.cc",
+        "rtc_certificate_generator.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":location",
+        ":ref_count",
+        ":ssl",
+        ":threading",
+        "../api:scoped_refptr",
+        "system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("sanitizer") {
+    sources = [
+        "sanitizer.h",
+    ]
+}
+
+rtc_sfu_source_set("safe_compare") {
+    sources = [
+        "numerics/safe_compare.h"
+    ]
+
+    deps = [ ":type_traits" ]
+}
+
+rtc_sfu_source_set("safe_conversions") {
+    sources = [
+        "numerics/safe_conversions.h",
+        "numerics/safe_conversions_impl.h",
+    ]
+     deps = [ ":checks" ]
+}
+
+rtc_sfu_source_set("safe_minmax") {
+    sources = [ "numerics/safe_minmax.h" ]
+    deps = [
+        ":checks",
+        ":safe_compare",
+        ":type_traits",
+    ]
+}
+
+rtc_sfu_source_set("server_socket_adapters") {
+    sources = [
+        "server_socket_adapters.cc",
+        "server_socket_adapters.h",
+    ]
+
+    deps = [
+        ":byte_buffer",
+        ":socket_adapters",
+    ]
+}
+
+rtc_sfu_source_set("socket") {
+    sources = [
+        "socket.cc",
+        "socket.h",
+    ]
+
+    deps = [
+        ":constructor_magic",
+        ":socket_address",
+    ]
+}
+
+rtc_sfu_source_set("socket_adapters") {
+    sources = [
+        "socket_adapters.cc",
+        "socket_adapters.h",
+    ]
+
+    deps = [
+        "../api:array_view",
+        ":async_socket",
+        ":buffer",
+        ":byte_buffer",
+        ":checks",
+        ":constructor_magic",
+        ":crypt_string",
+        ":http_common",
+        ":logging",
+        ":stringutils",
+        ":zero_memory",
+    ]
+}
+
+rtc_sfu_source_set("socket_address") {
+    sources = [
+        "socket_address.cc",
+        "socket_address.h",
+    ]
+
+    deps = [
+        ":byte_order",
+        ":checks",
+        ":ip_address",
+        ":logging",
+        ":net_helpers",
+        ":stringutils",
+        "system:rtc_export",
+        ":safe_conversions",
+    ]
+}
+
+rtc_sfu_source_set("socket_address_pair") {
+    sources = [
+        "socket_address_pair.cc",
+        "socket_address_pair.h",
+    ]
+
+    deps = [
+        ":socket_address",
+    ]
+}
+
+rtc_sfu_source_set("socket_factory") {
+    sources = [
+        "socket_factory.h",
+    ]
+
+    deps = [
+        ":async_socket",
+        ":socket",
+    ]
+}
+
+rtc_sfu_source_set("socket_server") {
+    sources = [
+        "socket_server.h",
+    ]
+
+    deps = [
+        ":socket_factory",
+    ]
+}
+
+rtc_sfu_source_set("ssl") {
+    sources = [
+        "boringssl_certificate.cc",
+        "boringssl_certificate.h",
+        "boringssl_identity.cc",
+        "boringssl_identity.h",
+        "message_digest.cc",
+        "message_digest.h",
+        "openssl.h",
+        "openssl_adapter.cc",
+        "openssl_adapter.h",
+        "openssl_digest.cc",
+        "openssl_digest.h",
+        "openssl_key_pair.cc",
+        "openssl_key_pair.h",
+        "openssl_session_cache.cc",
+        "openssl_session_cache.h",
+        "openssl_stream_adapter.cc",
+        "openssl_stream_adapter.h",
+        "openssl_utility.cc",
+        "openssl_utility.h",
+        "rtc_certificate.cc",
+        "rtc_certificate.h",        
+        "ssl_adapter.cc",
+        "ssl_adapter.h",
+        "ssl_certificate.cc",
+        "ssl_certificate.h",
+        "ssl_fingerprint.cc",
+        "ssl_fingerprint.h",
+        "ssl_identity.cc",
+        "ssl_identity.h",
+        "ssl_roots.h",
+        "ssl_stream_adapter.cc",
+        "ssl_stream_adapter.h",
+    ]
+
+     deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        ":async_socket",
+        ":buffer",
+        ":checks",
+        ":copy_on_write_buffer",
+        ":constructor_magic",
+        ":deprecation",
+        ":helpers",
+        ":logging",
+        ":location",
+        ":macromagic",
+        ":ref_count",
+        ":safe_conversions",
+        ":socket",
+        ":socket_address",
+        ":stream",
+        ":stringutils",
+        ":threading",
+        ":time_utils",
+        "../api:array_view",
+        "../api:refcountedbase",
+        "../api:scoped_refptr",
+        "../api/units:time_delta",
+        "../system_wrappers:field_trial",
+        "synchronization:mutex",
+        "system:rtc_export",
+        "task_utils:repeating_task",
+        "task_utils:to_queued_task",
+        "third_party/base64",
+        "third_party/sigslot",
+        "task_utils:pending_task_safety_flag",
+    ]
+}
+
+rtc_sfu_source_set("stream") {
+    sources = [
+        "stream.cc",
+        "stream.h",
+    ]
+
+    deps = [
+        ":buffer",
+        ":checks",
+        ":constructor_magic",
+        ":location",
+        ":threading",
+        "../api:array_view",
+        "system:rtc_export",
+        "third_party/sigslot",
+    ]    
+}
+
+rtc_sfu_source_set("stringutils") {
+    sources = [
+        "string_encode.cc",
+        "string_encode.h",
+        "string_to_number.cc",
+        "string_to_number.h",
+        "string_utils.cc",
+        "string_utils.h",
+        "strings/string_builder.cc",
+        "strings/string_builder.h",
+        "strings/string_format.cc",
+        "strings/string_format.h",
+    ]
+  
+    deps = [
+        ":checks",
+        ":macromagic",
+        ":safe_minmax",
+        "../api:array_view",
+    ]    
+}
+
+rtc_sfu_source_set("task_queue") {
+    sources = [
+        "task_queue.cc",
+        "task_queue.h",
+    ]
+
+     deps = [
+        ":macromagic",
+        "../api/task_queue",
+        "system:rtc_export",
+        ":thread_annotations",
+    ]    
+}
+
+rtc_sfu_source_set("task_queue_stdlib") {
+    sources = [
+        "task_queue_stdlib.cc",
+        "task_queue_stdlib.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":divide_round",
+        ":logging",
+        ":macromagic",
+        ":platform_thread",
+        ":event",
+        ":safe_conversions",
+        ":time_utils",
+        "../api/task_queue",
+        "../api/units:time_delta",
+        "synchronization:mutex",
+        ":thread_annotations",
+    ]    
+}
+
+#rtc_sfu_source_set("test_client") {
+#    sources = [
+#        "test_client.cc",
+#        "test_client.h",
+#    ]
+
+#    deps = [
+#        ":async_udp_socket",
+#        ":constructor_magic",
+#        ":fake_clock",
+#        ":gunit",
+#        ":threading",
+#        ":time_utils",
+#        "synchronization:mutex",
+#    ]
+#}
+
+#rtc_sfu_source_set("test_echo_server") {
+#    sources = [
+#        "test_echo_server.cc",
+#        "test_echo_server.h",
+#    ]
+
+#    deps = [
+#        ":constructor_magic",
+#        ":async_packet_socket",
+#        ":async_socket",
+#        ":async_tcp_socket",
+#        ":socket_address",
+#        ":socket_server",
+#        "third_party/sigslot",
+#        ":threading",
+#    ]
+#}
+
+#rtc_sfu_source_set("test_utils") {
+#    sources = [
+#        "test_utils.cc",
+#        "test_utils.h",
+#    ]
+
+#    deps = [
+#        ":async_socket",
+#        ":stream",
+#        "third_party/sigslot",
+#    ]
+#}
+
+rtc_sfu_source_set("thread_annotations") {
+    sources = [
+        "thread_annotations.h",
+    ]
+}
+
+rtc_sfu_source_set("thread_checker") {
+    sources = [
+        "thread_checker.h",
+    ]
+
+    deps = [
+        ":deprecation",
+        "synchronization:sequence_checker",
+    ]
+}
+
+rtc_sfu_source_set("time_utils") {
+    sources = [
+        "time_utils.cc",
+        "time_utils.h",
+    ]
+
+    deps = [
+        ":checks",
+        ":safe_conversions",
+        ":stringutils",
+        "system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("type_traits") {
+    sources = [
+        "type_traits.h",
+    ]
+}
+
+rtc_sfu_source_set("unique_id_generator") {
+    sources = [
+        "unique_id_generator.cc",
+        "unique_id_generator.h",
+    ]
+
+    deps = [
+        ":helpers",
+        ":ssl",
+        ":stringutils",
+        "../api:array_view",
+        "synchronization:sequence_checker",
+        "synchronization:mutex",
+        "system:no_unique_address",
+    ]    
+}
+
+rtc_sfu_source_set("untyped_function") {
+    sources = [
+        "untyped_function.h",
+    ]
+
+    deps = [ "system:assume" ]
+}
+
+#rtc_sfu_source_set("virtual_socket_server") {
+#    sources = [
+#        "virtual_socket_server.cc",
+#        "virtual_socket_server.h",
+#    ]
+
+#    deps = [
+#        ":checks",
+#        ":constructor_magic",
+#        ":event",
+#        ":criticalsection",
+#        ":fake_clock",
+#        ":logging",
+#        ":socket_server",
+#        ":socket_address_pair",
+#        ":threading",
+#        ":time_utils",
+#    ]
+#}
+
+rtc_sfu_source_set("weak_ptr") {
+    sources = [
+        "weak_ptr.cc",
+        "weak_ptr.h",
+    ]
+
+    deps = [
+        ":ref_count",
+        "../api:scoped_refptr",
+        "synchronization:sequence_checker",
+        "system:no_unique_address",
+    ]    
+}
+
+rtc_sfu_source_set("zero_memory") {
+    sources = [
+        "zero_memory.cc",
+        "zero_memory.h",
+    ]
+
+    deps = [
+        ":checks",
+        "../api:array_view",
+    ]    
+}

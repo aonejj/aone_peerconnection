@@ -1,0 +1,39 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("RTCVideoPacketRouteSourceInterface") {
+    sources = [
+        "RTCVideoPacketRouteSourceInterface.h",
+    ]
+
+    deps = [
+        "..:RTCPacketRouteSinkInterface",
+        "../../../src_update/api:_media_stream_interface",
+        "../../../src/api:notifier",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoRtpPacketListenSinkInterface") {
+    sources = [
+        "RTCVideoRtpPacketListenSinkInterface.h",
+    ]
+
+    deps = [
+        "../../../src/call:rtp_packet_sink_interface",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoRtpPacketListenerProxy") {
+    sources = [
+        "RTCVideoRtpPacketListenerProxy.cc",
+        "RTCVideoRtpPacketListenerProxy.h",
+    ]
+
+    deps = [
+        "..:RTCReceivedPacketSinks",
+        ":RTCVideoRtpPacketListenSinkInterface",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base/synchronization:mutex",
+    ]
+}

@@ -1,0 +1,43 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("engine") {
+    deps = [
+        ":constants",
+        ":payload_type_mapper",
+        ":unhandled_packets_buffer",
+    ]
+}
+
+rtc_sfu_source_set("constants") {
+    sources = [
+        "constants.cc",
+        "constants.h",
+    ]
+}
+
+rtc_sfu_source_set("payload_type_mapper") {
+    sources = [
+        "payload_type_mapper.cc",
+        "payload_type_mapper.h"
+    ]
+
+    deps = [
+        "../base:media_constants",
+        "../../api/audio_codecs",
+        "../base:codec",
+    ]
+}
+
+rtc_sfu_source_set("unhandled_packets_buffer") {
+    sources = [
+        "unhandled_packets_buffer.cc",
+        "unhandled_packets_buffer.h",
+    ]
+
+    deps = [
+        "../../rtc_base:copy_on_write_buffer",
+        "../../rtc_base:logging",
+        "../../rtc_base:stringutils",
+    ]
+}

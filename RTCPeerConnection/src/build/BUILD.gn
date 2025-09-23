@@ -1,0 +1,14 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("build") {
+    deps = [
+        ":build_config",
+    ]
+}
+
+rtc_sfu_source_set("build_config") {
+    sources = [
+        "build_config.h",
+    ]
+}

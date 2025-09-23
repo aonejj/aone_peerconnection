@@ -1,0 +1,48 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("base") {
+    deps = [
+        ":RTCAudioRouteTrackSource",
+        ":RTCVideoRouteTrackSource",
+    ]
+}
+
+rtc_sfu_source_set("RTCAudioRouteTrackSource") {
+    sources = [
+        "RTCAudioRouteTrackSource.cc",
+        "RTCAudioRouteTrackSource.h",
+    ]
+
+    deps = [
+        "../../api/audio:RTCAudioPacketRouteSourceInterface",
+        "../../../src/api:notifier",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:time_utils",
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base:thread_annotations",
+        "../../../src/rtc_base/system:rtc_export"
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoRouteTrackSource") {
+    sources = [
+        "RTCVideoRouteTrackSource.cc",
+        "RTCVideoRouteTrackSource.h",
+    ]
+
+    deps = [
+        "../../../src_update/api:_media_stream_interface",
+        "../../api/video:RTCVideoPacketRouteSourceInterface",
+        "../../../src/api:notifier",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging", 
+        "../../../src/rtc_base:time_utils",       
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base:thread_annotations",
+        "../../../src/rtc_base/system:rtc_export"        
+    ]
+}

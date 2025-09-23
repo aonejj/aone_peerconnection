@@ -1,0 +1,133 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("video") {
+    deps = [
+        ":video_rtp_headers",
+        ":encoded_image",
+        ":video_bitrate_allocator_factory",
+        ":video_layers_allocation",        
+    ]
+}
+
+rtc_sfu_source_set("video_rtp_headers") {
+    sources = [
+        "color_space.cc",
+        "color_space.h",
+        "hdr_metadata.cc",
+        "hdr_metadata.h",
+        "video_content_type.cc",
+        "video_content_type.h",
+        "video_rotation.h",
+        "video_timing.cc",
+        "video_timing.h",        
+    ]
+
+    deps = [
+        "..:array_view",
+        "../units:data_rate",
+        "../units:time_delta",
+        "../../rtc_base:checks",
+        "../../rtc_base:logging",
+        "../../rtc_base:safe_conversions",
+        "../../rtc_base:stringutils",
+        "../../rtc_base/system:rtc_export",        
+    ]
+}
+
+rtc_sfu_source_set("video_frame_type") {
+    sources = [
+        "video_frame_type.h",
+    ]
+
+    deps = [ "../../rtc_base:checks" ]
+}
+
+rtc_sfu_source_set("encoded_image") {
+    sources = [
+        "encoded_image.cc",
+        "encoded_image.h",
+    ]
+
+    deps = [
+        ":video_codec_constants",
+        ":video_frame_type",
+        ":video_rtp_headers",
+        ":video_codec_type",
+        ":video_frame_marking",
+        "..:refcountedbase",
+        "..:rtp_packet_info",
+        "..:scoped_refptr",
+        "../units:timestamp",
+        "../../rtc_base:checks",
+        "../../rtc_base:deprecation",
+        "../../rtc_base:ref_count",
+        "../../rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("video_codec_constants") {
+    sources = [
+        "video_codec_constants.h",
+    ]
+}
+
+rtc_sfu_source_set("video_bitrate_allocation") {
+    sources = [
+        "video_bitrate_allocation.cc",
+        "video_bitrate_allocation.h",
+    ]
+
+    deps = [
+        ":video_codec_constants",
+        "../../rtc_base:checks",
+        "../../rtc_base:safe_conversions",
+        "../../rtc_base:stringutils",
+        "../../rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("video_bitrate_allocator") {
+    sources = [
+        "video_bitrate_allocator.cc",
+        "video_bitrate_allocator.h",
+    ]
+
+    deps = [
+        ":video_bitrate_allocation",
+        "../units:data_rate",
+    ]
+}
+
+rtc_sfu_source_set("video_bitrate_allocator_factory") {
+    sources = [
+        "video_bitrate_allocator_factory.h",
+    ]
+
+    deps = [
+        ":video_bitrate_allocator",
+        "../video_codecs:video_codecs_api",
+    ]
+}
+
+rtc_sfu_source_set("video_layers_allocation") {
+    sources = [
+        "video_layers_allocation.h",
+    ]
+
+    deps = [
+        "../units:data_rate",
+    ]
+}
+
+rtc_sfu_source_set("video_codec_type") {
+    sources = [
+        "video_codec_type.h"
+    ]
+}
+
+rtc_sfu_source_set("video_frame_marking") {
+    sources = [
+        "video_frame_marking.h",
+    ]
+}

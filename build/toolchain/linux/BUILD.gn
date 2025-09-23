@@ -1,0 +1,90 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+import("//build/toolchain/toolchain.gni")
+
+clang_toolchain("clang_x86") {
+  # Output linker map files for binary size analysis.
+
+#  cc = "clang-9"
+#  cxx = "clang++-9"
+  cc = "clang"
+  cxx = "clang++"
+
+  ld = cxx
+  ar = "llvm-ar"
+#  readelf = "llvm-readelf"  
+#  nm = "llvm-nm" 
+#  enable_linker_map = true
+
+#  toolchain_args = {
+#    current_cpu = "x86"
+#    current_os = "linux"
+#  }
+}
+
+clang_toolchain("clang_x64") {
+  # Output linker map files for binary size analysis.
+
+#  cc = "clang-9"
+#  cxx = "clang++-9"
+  cc = "clang"
+  cxx = "clang++"
+
+  ld = cxx
+  ar = "llvm-ar"
+  
+#  readelf = "llvm-readelf"
+#  nm = "llvm-nm"
+#  enable_linker_map = true
+
+#  toolchain_args = {
+#    current_cpu = "x64"
+#    current_os = "linux"
+#  }
+}
+
+
+gcc_toolchain("x86") {
+  cc = "gcc"
+  cxx = "g++"
+
+  ar = "ar"
+  ld = cxx
+#  readelf = "readelf"
+#  nm = "nm"  
+#  enable_linker_map = true
+
+  # Output linker map files for binary size analysis.
+
+#  toolchain_args = {
+#    current_cpu = "x86"
+#    current_os = "linux"
+
+    # reclient does not support gcc.
+#    use_remoteexec = false
+#    is_clang = false
+#  }
+}
+
+gcc_toolchain("x64") {
+  cc = "gcc"
+  cxx = "g++"
+
+  ar = "ar"
+  ld = cxx
+
+#  readelf = "readelf"
+#  nm = "nm"  
+#  enable_linker_map = true
+  # Output linker map files for binary size analysis.
+
+
+#  toolchain_args = {
+#    current_cpu = "x64"
+#    current_os = "linux"
+
+    # reclient does not support gcc.
+#    use_remoteexec = false
+#    is_clang = false
+#  }
+}

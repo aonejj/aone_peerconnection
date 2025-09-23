@@ -1,0 +1,58 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("system_wrappers") {
+    sources = [
+        "include/clock.h",
+        "include/cpu_features_wrapper.h",
+        "include/rtp_to_ntp_estimator.h",
+        "include/metrics.h",
+        "source/clock.cc",
+        "source/cpu_features.cc",
+        "source/metrics.cc",
+        "source/rtp_to_ntp_estimator.cc",
+    ]
+
+    deps = [
+        ":field_trial",
+        ":ntp_time",
+        "../api:array_view",
+        "../api/units:timestamp",
+        "../modules/include:module_common_types_public",
+        "../modules/rtp_rtcp:rtcp_time_util",
+        "../rtc_base:checks",
+        "../rtc_base:constructor_magic",
+        "../rtc_base:logging",
+        "../rtc_base:numerics",
+        "../rtc_base:time_utils",
+        "../rtc_base:safe_conversions",
+        "../rtc_base:thread_annotations",
+        "../rtc_base/synchronization:mutex",
+        "../rtc_base/system:arch",
+        "../rtc_base/system:rtc_export",
+    ]        
+}
+
+rtc_sfu_source_set("ntp_time") {
+    public = [
+        "include/ntp_time.h",
+    ]
+
+    deps = [
+        "../rtc_base:safe_conversions",
+    ]
+}
+
+rtc_sfu_source_set("field_trial") 
+{
+    sources = [ 
+        "source/field_trial.cc",
+        "include/field_trial.h" 
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+        "../rtc_base:logging",
+        "../rtc_base:stringutils",
+    ]
+}

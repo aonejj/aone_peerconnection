@@ -1,0 +1,74 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("api") {
+    deps = [
+        ":_media_stream_interface",
+        ":_media_stream_track_proxy",
+        ":_peer_connection_interface_defs",
+        ":_video_codec",
+    ]
+}
+
+
+rtc_sfu_source_set("_media_stream_interface") {
+    sources = [
+        "_media_stream_interface.cc",
+        "_media_stream_interface.h",
+    ]
+
+    deps = [
+        "../../src/api:audio_options",
+        "../../src/api:media_types",
+        "../../src/api:scoped_refptr",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:ref_count",
+        "../../src/rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("_media_stream_track_proxy") {
+    sources = [
+        "_media_stream_track_proxy.h",
+    ]
+
+    deps = [
+        ":_media_stream_interface",
+        "../../src/api:proxy",
+        "../../src/api:make_ref_counted",
+    ]
+}
+
+rtc_sfu_source_set("_peer_connection_interface_defs") {
+    sources = [
+        "_peer_connection_interface_defs.h",
+    ]
+
+    deps = [
+        "../../src/api/transport",
+        "../../src/api:turn_customizer",
+        "../../src/api/crypto",
+        "../../src/api/transport:enums",
+        "../../src/media/base",
+        "../../src/media/base:media_config",
+        "../../src/p2p:base",
+        "../../src/rtc_base:ssl",
+        "../../src/rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("_video_codec") {
+    sources = [
+        "video_codecs/_video_codec.cc",
+        "video_codecs/_video_codec.h",
+    ]
+
+    deps = [
+        "../../src/api/video",
+        "../../src/api/video:video_codec_constants",
+        "../../src/api/video:video_codec_type",
+        "../../src/api/video_codecs:video_codecs_api",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base/system:rtc_export",
+    ]
+}

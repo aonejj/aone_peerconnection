@@ -1,0 +1,884 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("pc") {
+    deps = [
+        ":channel_interface",
+        ":dtls_srtp_transport",
+        ":dtls_transport",
+        ":external_hmac",
+        ":ice_transport",
+        ":jsep_transport",
+        ":jsep_transport_controller",
+        ":media_session",
+        ":rtcp_mux_filter",
+        ":rtp_media_utils",
+        ":rtp_transport",
+        ":rtp_transport_internal",
+        ":composite_rtp_transport",
+        ":sctp_transport",
+        ":sctp_utils",
+        ":srtp_filter",
+        ":srtp_session",
+        ":srtp_transport",
+        ":transport_stats",
+        ":used_ids",
+        ":session_description",
+        ":simulcast_description",
+        ":media_protocol_names",
+        ":rtp_data_channel",
+        ":sctp_data_channel",
+        ":sctp_data_channel_transport",
+        ":data_channel_utils",
+        ":jsep_ice_candidate",
+        ":local_audio_source",
+        ":sdp_serializer",
+        ":stream_collection",
+        ":webrtc_sdp",
+        ":webrtc_session_description_factory",
+        ":ice_server_parsing",
+        ":media_stream_observer",
+        ":audio_track",
+        ":sdp_state_provider",
+        ":remote_audio_source",
+        ":media_stream",
+    ]
+}
+
+rtc_sfu_source_set("channel_interface") {
+    sources = [
+        "channel_interface.h",
+    ]
+
+    deps = [
+        ":rtp_transport_internal",
+        "../api:media_types",
+        "../api:jsep",
+        "../api:rtp_parameters",
+        "../../src_update/media:_media_channel",
+    ]
+}
+
+rtc_sfu_source_set("dtls_srtp_transport") {
+    sources = [
+        "dtls_srtp_transport.cc",
+        "dtls_srtp_transport.h",
+    ]
+
+    deps = [
+        ":srtp_transport",
+        "../api:crypto_params",
+        "../api:dtls_transport_interface",
+        "../api:rtc_error",
+        "../p2p:base",
+        "../rtc_base:buffer",
+        "../rtc_base:checks",
+        "../rtc_base:logging",
+        "../rtc_base:ssl",
+        "../rtc_base/third_party/sigslot",
+    ]
+}
+
+rtc_sfu_source_set("dtls_transport") {
+    sources = [
+        "dtls_transport.cc",
+        "dtls_transport.h",
+    ]
+
+    deps = [
+        ":ice_transport",
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        "../api:dtls_transport_interface",
+        "../api:ice_transport_interface",
+        "../api:make_ref_counted",
+        "../api:scoped_refptr",
+        "../p2p:base",
+        "../rtc_base:checks",
+        "../rtc_base:logging",        
+        "../rtc_base/synchronization:mutex",
+        "../rtc_base/synchronization:sequence_checker",
+        "../rtc_base:thread_annotations",
+        "../rtc_base/third_party/sigslot", 
+        "../rtc_base:ssl",
+        "../rtc_base:threading", 
+        "../rtc_base:ref_count",        
+    ]
+}
+
+rtc_sfu_source_set("external_hmac") {
+    sources = [
+        "external_hmac.cc",
+        "external_hmac.h",
+    ]
+
+    deps = [
+        "../third_party/libsrtp",
+        "../rtc_base:logging",
+        "../rtc_base:zero_memory",
+    ]
+}
+
+rtc_sfu_source_set("ice_transport") {
+    sources = [
+        "ice_transport.cc",
+        "ice_transport.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        "../api:ice_transport_interface",
+        "../rtc_base:checks",
+        "../rtc_base:threading",
+        "../rtc_base/synchronization:sequence_checker",
+        "../rtc_base:thread_annotations",
+        "../rtc_base:thread_checker",
+    ]
+}
+
+rtc_sfu_source_set("jsep_transport") {
+    sources = [
+        "jsep_transport.cc",
+        "jsep_transport.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        ":composite_rtp_transport",
+        ":dtls_srtp_transport",
+        ":dtls_transport",
+        ":sctp_data_channel_transport",
+        ":rtcp_mux_filter",
+        ":rtp_transport",
+        ":rtp_transport_internal",
+        ":sctp_transport",
+        ":session_description",
+        ":srtp_filter",
+        ":srtp_transport",
+        ":transport_stats",
+        "../api:array_view",
+        "../api:candidate",
+        "../api:crypto_params",
+        "../api:ice_transport_interface",
+        "../api:jsep",
+        "../api:rtc_error",
+        "../api:scoped_refptr",
+        "../api/transport:data_channel_transport_interface",
+        "../media/sctp:sctp_transport_internal",
+        "../p2p:base",
+        "../rtc_base:checks",
+        "../rtc_base:constructor_magic",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base:logging",
+        "../rtc_base:ref_count",
+        "../rtc_base:criticalsection",
+        "../rtc_base:stringutils",
+        "../rtc_base:ssl",
+        "../rtc_base:thread_checker",
+        "../rtc_base/synchronization:sequence_checker",
+        "../rtc_base:threading",
+        "../rtc_base:thread_annotations",
+        "../rtc_base/third_party/sigslot",
+    ]
+}
+
+rtc_sfu_source_set("jsep_transport_controller") {
+    sources = [
+        "jsep_transport_controller.cc",
+        "jsep_transport_controller.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        ":dtls_srtp_transport",
+        ":dtls_transport",
+        ":jsep_transport",
+        ":rtp_transport",
+        ":rtp_transport_internal",
+        ":sctp_transport",
+        ":session_description",
+        ":srtp_transport",
+        ":transport_stats",
+        "../api:candidate",
+        "../api:dtls_transport_interface",
+        "../api:ice_transport_factory",
+        "../api:ice_transport_interface",
+        "../api:jsep",
+        "../api:packet_socket_factory",
+        "../api:rtc_error",
+        "../api:rtp_parameters",
+        "../api:scoped_refptr",
+        "../api/crypto",
+        "../api/rtc_event_log",
+        "../api/transport:enums",
+        "../api/transport:sctp_transport_factory_interface",
+        "../api/transport:data_channel_transport_interface",
+        "../media/sctp:sctp_transport_internal",
+        "../p2p:base",
+        "../rtc_base:async_invoker",
+        "../rtc_base:checks",
+        "../rtc_base:callback_list",
+        "../rtc_base:constructor_magic",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base:helpers",
+        "../rtc_base:location",
+        "../rtc_base:logging",
+        "../rtc_base:net_helper",        
+        "../rtc_base:ref_count",
+        "../rtc_base:socket_address",
+        "../rtc_base/synchronization:sequence_checker",
+        "../rtc_base:ssl",
+        "../rtc_base/third_party/sigslot",
+        "../rtc_base:threading",
+        "../rtc_base:thread_annotations",
+        "../../src_update/api:_peer_connection_interface_defs",
+    ]    
+}
+
+rtc_sfu_source_set("media_session") {
+    sources = [
+        "media_session.cc",
+        "media_session.h",
+    ]
+
+    deps = [
+        ":jsep_transport",
+        ":media_protocol_names",
+        ":media_protocol_names",
+        ":rtp_media_utils",
+        ":session_description",
+        ":simulcast_description",
+        ":used_ids",
+        "../api:rtp_parameters",
+        "../api:rtp_transceiver_direction",
+        "../api/crypto",
+        "../api:crypto_params",
+        "../api:media_types",
+        "../media/base:codec",
+        "../media/base:media_constants",
+        "../media/base:h264_profile_level_id",
+        "../media/base:rid_description",
+        "../media/sctp:sctp_transport_internal",
+        "../media/base:stream_params",
+        "../p2p:base", 
+        "../rtc_base:checks",
+        "../rtc_base:helpers",
+        "../rtc_base:logging",
+        "../rtc_base:ssl",
+        "../rtc_base:stringutils",
+        "../rtc_base/third_party/base64",
+        "../rtc_base:unique_id_generator",
+        "../system_wrappers",
+        "../system_wrappers:field_trial",
+        "../../src_update/media:_media_engine",
+        "../../rtc_pc_src/pc:RTCChannelManager",
+    ]
+}
+
+rtc_sfu_source_set("rtcp_mux_filter") {
+    sources = [
+        "rtcp_mux_filter.cc",
+        "rtcp_mux_filter.h",
+    ]
+
+    deps = [
+        ":session_description",
+        "../rtc_base:logging",
+    ]
+}
+
+rtc_sfu_source_set("rtp_media_utils") {
+    sources = [
+        "rtp_media_utils.cc",
+        "rtp_media_utils.h",
+    ]
+
+  deps = [
+        "../api:rtp_transceiver_direction",
+        "../rtc_base:checks",
+        "../rtc_base:logging",
+  ]    
+}
+
+rtc_sfu_source_set("rtp_transport") {
+    sources = [
+        "rtp_transport.cc",
+        "rtp_transport.h",
+    ]
+
+    deps = [
+        ":rtp_transport_internal",
+        ":session_description",
+        "../api:array_view",
+        "../api/units:timestamp",
+        "../call:rtp_demuxer",
+        "../media/base:rtp_utils",
+        "../modules/rtp_rtcp:rtp_rtcp_format",
+        "../p2p:base", 
+        "../rtc_base:async_packet_socket",
+        "../rtc_base:checks",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base:logging",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base/network:sent_packet",
+        "../rtc_base:network_route",
+        "../rtc_base:socket",
+        "../rtc_base/third_party/sigslot",
+        "../../rtc_pc_src:_deprecate_defines",
+    ]    
+}
+
+rtc_sfu_source_set("rtp_transport_internal") {
+    sources = [
+        "rtp_transport_internal.h"
+    ]
+
+    deps = [
+        ":session_description",
+        "../p2p:base",
+        "../call:rtp_demuxer",
+        "../rtc_base:network_route",
+        "../rtc_base:ssl",
+        "../rtc_base/third_party/sigslot",
+    ]
+}
+
+rtc_sfu_source_set("composite_rtp_transport") {
+    sources = [
+        "composite_rtp_transport.cc",
+        "composite_rtp_transport.h",
+    ]
+
+    deps = [
+        ":session_description",
+        ":rtp_transport_internal",
+        "../call:rtp_packet_sink_interface",
+        "../call:rtp_demuxer",
+        "../p2p:base",
+        "../rtc_base:async_packet_socket",
+        "../rtc_base:checks",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base/network:sent_packet",
+        "../rtc_base:network_route",
+        "../rtc_base:socket",
+        "../rtc_base/third_party/sigslot",
+    ]    
+}
+
+rtc_sfu_source_set("sctp_transport") {
+    sources = [
+        "sctp_transport.cc",
+        "sctp_transport.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        ":dtls_transport",
+        "../api:dtls_transport_interface",
+        "../api:scoped_refptr",
+        "../api:sctp_transport_interface",
+        "../media/sctp:sctp_transport_internal",
+        "../media/sctp",
+        "../p2p:base",
+        "../rtc_base:checks",
+        "../rtc_base:location",
+        "../rtc_base:logging",
+        "../rtc_base/synchronization:mutex",
+        "../rtc_base/synchronization:sequence_checker",
+        "../rtc_base/third_party/sigslot",
+        "../rtc_base:threading",
+        "../rtc_base:thread_annotations",
+    ]    
+}
+
+rtc_sfu_source_set("sctp_data_channel_transport") {
+    sources = [
+        "sctp_data_channel_transport.cc",
+        "sctp_data_channel_transport.h",
+    ]
+
+    deps = [
+        ":sctp_utils",
+        "../api/transport:data_channel_transport_interface",
+        "../api:rtc_error",
+        "../media/sctp:sctp_transport_internal",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base/third_party/sigslot",
+    ]    
+}
+
+rtc_sfu_source_set("sctp_utils") {
+    sources = [
+        "sctp_utils.cc",
+        "sctp_utils.h",
+    ]
+
+    deps = [
+        "../api",
+        "../api:data_channel_interface",
+        "../api:priority",
+        "../api/transport:data_channel_transport_interface",
+        "../media/sctp:sctp_transport_internal",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base:byte_buffer",
+        "../rtc_base:checks",
+        "../rtc_base:logging",
+        "../../src_update/media:_media_channel",
+    ]    
+}
+
+rtc_sfu_source_set("srtp_filter") {
+    sources = [
+        "srtp_filter.cc",
+        "srtp_filter.h",
+    ]
+
+    deps = [
+        ":session_description",
+        "../api:array_view",
+        "../api:crypto_params",
+        "../api:jsep",
+        "../rtc_base:buffer",
+        "../rtc_base:constructor_magic",
+        "../rtc_base:logging",
+        "../rtc_base/third_party/base64",
+        "../rtc_base:ssl",
+        "../rtc_base:thread_checker",
+        "../rtc_base:zero_memory",
+    ]    
+}
+
+rtc_sfu_source_set("srtp_session") {
+    sources = [
+        "srtp_session.cc",
+        "srtp_session.h",
+    ]
+
+    deps = [
+        ":external_hmac",
+        "../../rtc_pc_src:_deprecate_defines",
+        "../api:array_view",
+        "../api:scoped_refptr",
+        "../media/base:rtp_utils",
+        "../modules/rtp_rtcp:rtp_rtcp_format",
+        "../rtc_base:constructor_magic",
+        "../rtc_base:logging",
+        "../rtc_base:ssl",
+        "../rtc_base:stringutils",
+        "../rtc_base/synchronization:mutex",        
+        "../rtc_base:time_utils",
+        "../rtc_base:thread_checker",
+        "../system_wrappers",
+        "../system_wrappers:field_trial",
+        "../third_party/libsrtp",
+    ]    
+}
+
+rtc_sfu_source_set("srtp_transport") {
+    sources = [
+        "srtp_transport.cc",
+        "srtp_transport.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        ":rtp_transport",
+        ":srtp_session",
+        "../api:rtc_error",
+        "../api:crypto_params",
+        "../media/base:rtp_utils",
+        "../modules/rtp_rtcp:rtp_rtcp_format",
+        "../p2p:base",
+        "../rtc_base:async_packet_socket",
+        "../rtc_base:buffer",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base:checks",
+        "../rtc_base:logging",
+        "../rtc_base:location",
+        "../rtc_base:network_route",
+        "../rtc_base:safe_conversions",
+        "../rtc_base:ssl",
+        "../rtc_base/synchronization:mutex",
+        "../rtc_base/synchronization:sequence_checker",
+        "../rtc_base/third_party/sigslot",
+        "../rtc_base/third_party/base64",
+        "../rtc_base:threading",
+        "../rtc_base:zero_memory",
+    ]    
+}
+
+rtc_sfu_source_set("transport_stats") {
+    sources = [
+        "transport_stats.cc",
+        "transport_stats.h",
+    ]
+
+    deps = [
+        "../api:dtls_transport_interface",
+        "../p2p:base",
+        "../rtc_base:ssl",
+    ]    
+}
+
+rtc_sfu_source_set("used_ids") {
+    sources = [
+        "used_ids.h",
+    ]
+
+    deps = [
+        "../api:rtp_parameters",
+        "../media/base:codec",
+        "../rtc_base:checks",
+        "../rtc_base:logging",
+    ]
+}
+
+rtc_sfu_source_set("session_description") {
+    sources = [
+        "session_description.cc",
+        "session_description.h",
+    ]
+
+    deps = [
+        ":media_protocol_names",
+        ":simulcast_description",
+        "../api:crypto_params",
+        "../api:media_types",
+        "../api:rtp_parameters",
+        "../api:rtp_transceiver_direction",
+        "../media/base:codec",
+        "../media/base:media_constants",
+        "../media/base:rid_description",
+        "../media/base:stream_params",
+        "../p2p:base",
+        "../rtc_base:checks",
+        "../rtc_base:deprecation",
+        "../rtc_base:socket_address",
+        "../rtc_base/system:rtc_export",
+        "../../src_update/media:_media_channel",
+    ]
+}
+
+rtc_sfu_source_set("simulcast_description") {
+    sources = [
+        "simulcast_description.cc",
+        "simulcast_description.h",
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("media_protocol_names") {
+    sources = [
+        "media_protocol_names.cc",
+        "media_protocol_names.h",
+    ]
+}
+
+rtc_sfu_source_set("rtp_data_channel") {
+    sources = [
+        "rtp_data_channel.cc",
+        "rtp_data_channel.h",
+    ]
+
+    deps = [
+        ":data_channel_utils",
+        "../api:make_ref_counted",
+        "../api:data_channel_interface",
+        "../api:priority",
+        "../api:proxy",
+        "../api:rtc_error",
+        "../api:scoped_refptr",
+        "../api/transport:data_channel_transport_interface",
+        "../rtc_base:async_invoker",
+        "../rtc_base:checks",
+        "../rtc_base:location",
+        "../rtc_base:logging",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base/third_party/sigslot",
+        "../rtc_base:threading",
+        "../rtc_base:thread_annotations",
+        "../../src_update/media:_media_channel",
+    ]
+}
+
+rtc_sfu_source_set("sctp_data_channel") {
+    sources = [
+        "sctp_data_channel.cc",
+        "sctp_data_channel.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        ":data_channel_utils",
+        ":sctp_utils",
+        "../api:data_channel_interface",
+        "../api:make_ref_counted",
+        "../api:priority",
+        "../api:proxy",
+        "../api:rtc_error",
+        "../api:scoped_refptr",
+        "../api/task_queue",
+        "../api/transport:data_channel_transport_interface",
+        "../media/sctp:sctp_transport_internal",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base:checks",
+        "../rtc_base:location",
+        "../rtc_base:logging",
+        "../rtc_base:ref_count",
+        "../rtc_base/task_utils:to_queued_task",
+        "../rtc_base:ssl",
+        "../rtc_base/third_party/sigslot",
+        "../rtc_base:thread_annotations",
+        "../rtc_base:threading",
+        "../../src_update/media:_media_channel",
+    ]    
+}
+
+rtc_sfu_source_set("data_channel_utils") {
+    sources = [
+        "data_channel_utils.cc",
+        "data_channel_utils.h",
+    ]
+
+    deps = [
+        "../api:data_channel_interface",
+        "../rtc_base:checks",
+        "../../src_update/media:_media_engine",
+    ]
+}
+
+rtc_sfu_source_set("jsep_ice_candidate") {
+    sources = [
+        "jsep_ice_candidate.cc",
+    ]
+
+    deps = [
+        ":webrtc_sdp",
+        "../api:jsep_ice_candidate",
+    ]
+}
+
+rtc_sfu_source_set("local_audio_source") {
+    sources = [
+        "local_audio_source.cc",
+        "local_audio_source.h",
+    ]
+
+    deps = [
+        "../api:audio_options",
+        "../api:notifier",
+        "../api:scoped_refptr",
+        "../rtc_base:ref_count",
+        "../../src_update/api:_media_stream_interface",
+    ]    
+}
+
+rtc_sfu_source_set("sdp_serializer") {
+    sources = [
+        "sdp_serializer.cc",
+        "sdp_serializer.h",
+    ]
+
+    deps = [
+        ":session_description",
+        ":simulcast_description",
+        "../api:rtc_error",
+        "../api:jsep",
+        "../media/base:rid_description",
+        "../modules/rtp_rtcp:rtp_rtcp_format",
+        "../rtc_base:checks",
+        "../rtc_base:stringutils",
+    ]    
+}
+
+rtc_sfu_source_set("stream_collection") {
+    sources = [
+        "stream_collection.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src/api:RTCConnectionInterface",
+    ]
+}
+
+rtc_sfu_source_set("webrtc_sdp") {
+    sources = [
+        "webrtc_sdp.cc",
+        "webrtc_sdp.h",
+        "jsep_session_description.cc",
+    ]
+
+    deps = [
+        ":media_protocol_names",
+        ":media_session",
+        ":sdp_serializer",
+        ":session_description",
+        ":simulcast_description",
+        "../api",
+        "../api:candidate",
+        "../api:crypto_params",
+        "../api:jsep_ice_candidate",
+        "../api:media_types",
+        "../api:rtc_error",
+        "../api:rtp_parameters",
+        "../api:rtp_transceiver_direction",
+        "../media/base:codec",
+        "../media/base:media_constants",
+        "../media/base:rid_description",
+        "../media/base:stream_params",
+        "../media/base:rtp_utils",
+        "../media/sctp:sctp_transport_internal",
+        "../p2p:base",
+        "../rtc_base/system:rtc_export",
+        "../rtc_base:macromagic",
+        "../rtc_base:checks",
+        "../rtc_base:logging",
+        "../rtc_base:ssl",
+        "../rtc_base:stringutils",
+        "../rtc_base/third_party/base64",
+    ]    
+}
+
+rtc_sfu_source_set("webrtc_session_description_factory") {
+    sources = [
+        "webrtc_session_description_factory.cc",
+        "webrtc_session_description_factory.h",
+    ]
+
+    deps = [
+        ":media_session",
+        ":sdp_state_provider",
+        ":session_description",
+        ":webrtc_sdp",
+        "../api",
+        "../api:jsep",
+        "../api:rtc_error",
+        "../api:scoped_refptr",
+        "../api/task_queue",
+        "../p2p:base",
+        "../rtc_base:checks",
+        "../rtc_base:constructor_magic",
+        "../rtc_base:logging",
+        "../rtc_base:location",
+        "../rtc_base:ssl",
+        "../rtc_base:rtc_certificate_generator",
+        "../rtc_base:ref_count",
+        "../rtc_base:ssl",
+        "../rtc_base:stringutils",        
+        "../rtc_base/third_party/sigslot",
+        "../rtc_base:threading",
+        "../rtc_base:unique_id_generator",
+        "../../src_update/api:_peer_connection_interface_defs",
+        "../../rtc_pc_src/pc:RTCChannelManager",
+    ]    
+}
+
+rtc_sfu_source_set("ice_server_parsing") {
+    sources = [
+        "ice_server_parsing.cc",
+        "ice_server_parsing.h",
+    ]
+
+    deps = [
+        "../api:rtc_error",
+        "../p2p:base",
+        "../rtc_base:macromagic",
+        "../rtc_base:checks",
+        "../rtc_base:ip_address",
+        "../rtc_base:logging",
+        "../rtc_base:socket_address",
+        "../rtc_base/system:rtc_export",
+        "../../src_update/api:_peer_connection_interface_defs",
+    ]    
+}
+
+rtc_sfu_source_set("media_stream_observer") {
+    sources = [
+        "media_stream_observer.cc",
+        "media_stream_observer.h",
+    ]
+
+    deps = [
+        "../api:scoped_refptr",
+        "../rtc_base/third_party/sigslot",
+        "../../src_update/api:_media_stream_interface",
+    ]    
+}
+
+rtc_sfu_source_set("audio_track") {
+    sources = [
+        "audio_track.cc",
+        "audio_track.h",
+    ]
+
+    deps = [
+        "../api:scoped_refptr",
+        "../api:media_stream_proxy",
+        "../rtc_base:checks",
+        "../rtc_base:ref_count",
+        "../rtc_base:thread_checker",
+        "../../src_update/api:_media_stream_interface",
+    ]    
+}
+
+rtc_sfu_source_set("sdp_state_provider") {
+    sources = [
+        "sdp_state_provider.h",
+    ]
+
+    deps = [
+        "../api:jsep",
+        "../../src_update/api:_peer_connection_interface_defs",
+    ]
+}
+
+rtc_sfu_source_set("remote_audio_source") {
+    sources = [
+        "remote_audio_source.cc",
+        "remote_audio_source.h",
+    ]
+
+    deps = [
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        "../api:call_api",
+        "../api:notifier",
+        "../api:scoped_refptr",
+        "../api/task_queue",
+        "../rtc_base:checks",
+        "../rtc_base:location",
+        "../rtc_base:logging",
+        "../rtc_base:numerics",
+        "../rtc_base/synchronization:mutex",
+        "../rtc_base:stringutils",
+        "../rtc_base:safe_conversions",
+        "../rtc_base:threading",
+        "../rtc_base:thread_checker",
+        "../../src_update/media:_media_channel",
+    ]    
+}
+
+rtc_sfu_source_set("media_stream") {
+    sources = [
+        "media_stream.cc",
+        "media_stream.h",
+    ]
+
+    deps = [
+        "../api:make_ref_counted",
+        "../api:notifier",
+        "../api:scoped_refptr",
+        "../rtc_base:checks",
+        "../../src_update/api:_media_stream_interface",
+    ]    
+}
+

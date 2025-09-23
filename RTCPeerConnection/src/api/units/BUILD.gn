@@ -1,0 +1,85 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("units") {
+    deps = [
+        ":data_rate",
+        ":frequency",
+        ":timestamp",        
+    ]
+}
+
+rtc_sfu_source_set("data_rate") {
+    sources = [
+        "data_rate.cc",
+        "data_rate.h",
+    ]
+
+    deps = [
+        ":data_size",
+        ":frequency",
+        ":time_delta",
+        "..:array_view",
+        "../../rtc_base:checks",
+        "../../rtc_base:stringutils",
+        "../../rtc_base/units:unit_base",        
+    ]
+}
+
+rtc_sfu_source_set("data_size") {
+    sources = [
+        "data_size.cc",
+        "data_size.h",
+    ]
+
+    deps = [
+        "..:array_view",
+        "../../rtc_base:checks",
+        "../../rtc_base:stringutils",
+        "../../rtc_base/units:unit_base",
+    ]
+}
+
+rtc_sfu_source_set("frequency") {
+    sources = [
+        "frequency.cc",
+        "frequency.h",
+    ]
+
+    deps = [
+        ":time_delta",
+        "..:array_view",
+        "../../rtc_base:checks",
+        "../../rtc_base:stringutils",
+        "../../rtc_base/units:unit_base",
+    ]
+}
+
+rtc_sfu_source_set("time_delta") {
+    sources = [
+        "time_delta.cc",
+        "time_delta.h",
+    ]
+
+    deps = [
+        "..:array_view",
+        "../../rtc_base:checks",
+        "../../rtc_base:stringutils",
+        "../../rtc_base/units:unit_base",
+    ]
+}
+
+rtc_sfu_source_set("timestamp") {
+    sources = [
+        "timestamp.cc",
+        "timestamp.h",
+    ]
+
+    deps = [
+        ":time_delta",
+        "..:array_view",
+        "../../rtc_base:checks",
+        "../../rtc_base:stringutils",
+        "../../rtc_base/units:unit_base",
+    ]
+}

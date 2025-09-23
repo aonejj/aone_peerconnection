@@ -1,0 +1,140 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+# compiler ---------------------------------------------------------------------
+#
+# Base compiler configuration.
+
+declare_args() {
+    fatal_linker_warnings = true
+}
+
+
+config("compiler") {
+  cflags = []
+  cflags_c = []
+  cflags_cc = []
+  ldflags = []
+  defines = []
+  configs = []
+  cflags_objc = []
+  cflags_objcc = []
+
+  if(is_linux) {
+      defines += [
+        # _FILE_OFFSET_BITS=64 should not be set on Android in order to maintain
+        # the behavior of the Android NDK from earlier versions.
+        # See https://android-developers.googleblog.com/2017/09/introducing-android-native-development.html
+        "_FILE_OFFSET_BITS=64",
+        "_LARGEFILE_SOURCE",
+        "_LARGEFILE64_SOURCE",
+      ]    
+  }
+
+  if(is_clang) {
+    cflags += ["-fno-delete-null-pointer-checks"]
+    cflags += [ "-fno-ident" ]
+  }
+
+  if(is_linux) {
+    cflags += [ "-fno-strict-aliasing" ]
+
+    if(fatal_linker_warnings) {
+      ldflags += [ "-Wl,--fatal-warnings" ]
+    }
+  }
+
+  if (is_clang && is_debug) {
+    cflags_cc += [
+      "-Wno-undefined-bool-conversion",
+      "-Wno-tautological-undefined-compare",
+    ]
+  }
+
+  if(is_linux) {
+    cflags += [ "-fPIC" ]
+    ldflags += [ "-fPIC" ]
+
+    ldflags += [
+      "-Wl,-z,noexecstack",
+      "-Wl,-z,relro",
+    ]    
+  }
+
+  if(is_linux) {
+    cflags += [ "-pthread" ]
+  }
+
+  if (is_clang) {
+    cflags += [ "-fcolor-diagnostics" ]
+    cflags += [ "-fmerge-all-constants" ]
+  }
+
+  if(is_linux) {
+    if(is_clang) {
+      standard_prefix = "c"
+      defines += [ "_GNU_SOURCE" ]
+    } else {
+      standard_prefix = "gnu"
+    }
+
+    cflags_c += [ "-std=${standard_prefix}11" ]
+
+    if(is_clang) {
+      cflags_cc += [ "-std=${standard_prefix}++17" ]
+      cflags_cc += [ "-Wno-trigraphs" ]
+      cflags_cc += [ "-D_GLIBCXX_USE_CXX11_ABI=1" ]
+    } else {
+      cflags_cc += [ "-std=${standard_prefix}++2a" ]
+      cflags_cc += [ "-D_GLIBCXX_USE_CXX11_ABI=1" ]
+    }
+  }
+
+  cflags_objc += cflags_c
+  cflags_objcc += cflags_cc
+}
+
+# Optimization -----------------------------------------------------------------
+if(is_linux) {
+  common_optimize_on_cflags = []
+  common_optimize_on_ldflags = [] 
+
+  common_optimize_on_cflags += [
+    # Put data and code in their own sections, so that unused symbols
+    # can be removed at link time with --gc-sections.
+    "-fdata-sections",
+    "-ffunction-sections",
+  ]
+
+  common_optimize_on_ldflags += [
+    # Specifically tell the linker to perform optimizations.
+    # See http://lwn.net/Articles/192624/ .
+    # -O2 enables string tail merge optimization in gold and lld.
+    "-Wl,-O2",
+    "-Wl,--gc-sections",
+  ]
+}
+
+config("default_optimization") {
+  if(is_debug) {
+    cflags = [ "-O0" ]
+    ldflags = []    
+  } else {
+    cflags = [ "-O2" ] + common_optimize_on_cflags
+    ldflags = common_optimize_on_ldflags
+  }
+}
+
+config("no_exceptions") {
+  if(is_linux) {
+    cflags_cc = [ "-fno-exceptions" ]
+    cflags_objcc = cflags_cc    
+  }
+}
+
+config("no_rtti") {
+  if(is_linux) {
+      cflags_cc = [ "-fno-rtti" ]
+      cflags_objcc = cflags_cc    
+  }
+}
+

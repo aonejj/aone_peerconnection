@@ -1,0 +1,11 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("aligned_malloc") {
+    sources = [
+        "aligned_malloc.cc",
+        "aligned_malloc.h",
+    ]
+
+    deps = [ "..:checks" ]
+}

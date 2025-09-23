@@ -1,0 +1,19 @@
+//////////////////////////////////////////////////////////////////////////
+//
+// author : kimi
+// desc   : Pure Abstract Node for rtc media server.
+//			TODO... impl
+//
+//////////////////////////////////////////////////////////////////////////
+
+#include "rtc_base/thread.h"
+
+#include "ConferenceNode.h"
+
+namespace rtc_media_server {
+
+void ConferenceNode::WrapCurrentThread() {
+
+}
+
+}

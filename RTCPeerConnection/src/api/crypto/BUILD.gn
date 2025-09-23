@@ -1,0 +1,15 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("crypto") {
+    sources = [
+        "crypto_options.cc",
+        "crypto_options.h",
+    ]
+
+    deps = [
+        "../../rtc_base:logging",
+        "../../rtc_base:ssl",
+        "../../rtc_base/system:rtc_export",
+    ]    
+}

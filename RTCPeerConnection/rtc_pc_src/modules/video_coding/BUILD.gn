@@ -1,0 +1,35 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("video_coding") {
+    deps = [
+        ":RTCNackModule2",
+    ]
+}
+
+rtc_sfu_source_set("RTCNackModule2") {
+    sources = [
+        "RTCNackModule2.cc",
+        "RTCNackModule2.h",
+    ]
+
+    deps = [
+        "../..:_deprecate_defines",
+        "../../../src/modules/include:module_common_types",
+        "../../../src/modules/video_coding:histogram",
+        "../../../src/api/units:time_delta",
+        "../../../src/api/units:timestamp",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base/synchronization:sequence_checker",
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base:task_queue",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base/experiments:field_trial_parser",
+        "../../../src/rtc_base/task_utils:pending_task_safety_flag",
+        "../../../src/rtc_base/task_utils:repeating_task",
+        "../../../src/rtc_base:thread_annotations",
+        "../../../src/rtc_base:threading",
+        "../../../src/system_wrappers:field_trial",
+        "../../../src/system_wrappers"
+    ]
+}

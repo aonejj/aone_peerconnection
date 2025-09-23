@@ -1,0 +1,36 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+config("config") {
+    cflags = [
+        "-Wno-unused-const-variable",
+        "-Wno-unused-function",
+    ]
+}
+
+source_set("double_conversion") {
+
+    configs += [":config"]
+
+    sources = [
+        "double_conversion/bignum-dtoa.cc",
+        "double_conversion/bignum-dtoa.h",
+        "double_conversion/bignum.cc",
+        "double_conversion/bignum.h",
+        "double_conversion/cached-powers.cc",
+        "double_conversion/cached-powers.h",
+        "double_conversion/diy-fp.h",
+        "double_conversion/double-conversion.h",
+        "double_conversion/double-to-string.cc",
+        "double_conversion/double-to-string.h",
+        "double_conversion/fast-dtoa.cc",
+        "double_conversion/fast-dtoa.h",
+        "double_conversion/fixed-dtoa.cc",
+        "double_conversion/fixed-dtoa.h",
+        "double_conversion/ieee.h",
+        "double_conversion/string-to-double.cc",
+        "double_conversion/string-to-double.h",
+        "double_conversion/strtod.cc",
+        "double_conversion/strtod.h",
+        "double_conversion/utils.h",        
+    ]
+}

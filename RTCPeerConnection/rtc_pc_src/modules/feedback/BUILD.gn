@@ -1,0 +1,28 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("feedback") {
+    deps = [
+        ":RTCFeedbackPacketRouter",
+    ]
+}
+
+rtc_sfu_source_set("RTCFeedbackPacketRouter") {
+    sources = [
+        "RTCFeedbackPacketRouter.cc",
+        "RTCFeedbackPacketRouter.h",
+    ]
+
+    deps = [
+        "../rtp_rtcp:RTCRtpRtcpInterface",
+        "../../../src/modules/remote_bitrate_estimator",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:constructor_magic",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:time_utils",
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base:thread_annotations",
+    ]
+}
+

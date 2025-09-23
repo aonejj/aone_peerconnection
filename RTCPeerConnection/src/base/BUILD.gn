@@ -1,0 +1,46 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("base") {
+    deps = [
+        "third_party/double_conversion",
+    ]
+}
+
+rtc_sfu_source_set("base_export") {
+    sources = [
+        "base_export.h",
+    ]
+}
+
+rtc_sfu_source_set("compiler_specific") {
+    sources = [
+        "compiler_specific.h",
+    ]
+
+    deps = [
+        "../build:build_config",
+    ]
+}
+
+rtc_sfu_source_set("dcheck_is_on") {
+    sources = [
+        "dcheck_is_on.h",
+    ]
+}
+
+rtc_sfu_source_set("immediate_crash") {
+    sources = [
+        "immediate_crash.h",
+    ]
+
+    deps = [ "../build:build_config" ]
+}
+
+rtc_sfu_source_set("template_util") {
+    sources = [
+        "template_util.h",
+    ]
+
+    deps = [ "../build:build_config" ]
+}

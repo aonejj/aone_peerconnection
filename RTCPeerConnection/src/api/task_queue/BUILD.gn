@@ -1,0 +1,38 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("task_queue") {
+    sources = [
+        "task_queue_base.cc",
+        "task_queue_base.h",
+        "task_queue_factory.h",
+    ]
+
+    deps = [
+        ":queued_task",
+        "../../rtc_base:checks",
+        "../../rtc_base:logging",
+        "../../rtc_base:macromagic",
+        "../../rtc_base:thread_annotations",
+        "../../rtc_base/system:rtc_export",
+        "../units:time_delta",        
+    ]
+}
+
+rtc_sfu_source_set("default_task_queue_factory") {
+    sources = [
+        "default_task_queue_factory_stdlib.cc",
+        "default_task_queue_factory.h"
+    ]
+
+    deps = [
+        ":task_queue",
+        "../../rtc_base:task_queue_stdlib",
+    ]
+}
+
+rtc_sfu_source_set("queued_task") {
+    sources = [
+        "queued_task.h"
+    ]
+}

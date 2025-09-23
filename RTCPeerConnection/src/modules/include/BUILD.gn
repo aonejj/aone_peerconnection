@@ -1,0 +1,39 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("include") {
+    deps = [
+        ":module_common_types_public",
+        ":module_common_types",
+        ":module_fec_types",
+        ":module",
+    ]
+}
+
+rtc_sfu_source_set("module_common_types_public") {
+    sources = [
+        "module_common_types_public.h",
+    ]
+}
+
+rtc_sfu_source_set("module_common_types") {
+    sources = [
+        "module_common_types.h",
+    ]
+
+    deps = [
+        "../../rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("module_fec_types") {
+    sources = [
+        "module_fec_types.h",
+    ]
+}
+
+rtc_sfu_source_set("module") {
+    sources = [
+        "module.h",
+    ]
+}

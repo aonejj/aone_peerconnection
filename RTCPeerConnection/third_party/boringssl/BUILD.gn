@@ -1,0 +1,16 @@
+# Copyright (c) 2024 The AONE SFU project authors
+
+group("boringssl") {
+    deps = [
+        ":boringssl_copy_to_target",
+    ]
+}
+
+copy("boringssl_copy_to_target") {
+    sources = [
+        "build/crypto/libcrypto.so",
+        "build/ssl/libssl.so",
+    ]
+
+    outputs = [ "$root_out_dir/{{source_file_part}}" ] 
+}

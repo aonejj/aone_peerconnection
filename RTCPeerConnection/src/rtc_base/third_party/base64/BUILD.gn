@@ -1,0 +1,14 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("base64") {
+    sources = [
+        "base64.cc",
+        "base64.h",
+    ]
+  
+    deps = [
+        "../..:checks",
+        "../../system:rtc_export",
+    ]
+}

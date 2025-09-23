@@ -1,0 +1,180 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("video") {
+    deps = [
+        ":RTCRtpVideoPacketStreamReceiver",
+        ":RTCVideoPacketRouteFeeder",
+        ":RTCVideoPacketRoutingSink",
+        ":RTCVideoReceiveStream2Impl",
+        ":RTCVideoSendStreamImpl",
+        ":RTCVideoSendStreamRouter",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpVideoPacketStreamReceiver") {
+    sources = [
+        "RTCRtpVideoPacketStreamReceiver.cc",
+        "RTCRtpVideoPacketStreamReceiver.h",
+    ]
+
+    deps = [
+        "../api/video:RTCVideoRtpPacketListenSinkInterface",
+        "../call:RTCVideoReceiveStream",
+        "../call:RTCRtpTransportControllerSendInterface",
+        "../modules/rtp_rtcp:RTCRtpRtcpRecvImpl",
+        "../modules/feedback:RTCFeedbackPacketRouter",
+        "../modules/pacing:RTCPacketRouter",
+        "../modules/video_coding:RTCNackModule2",
+        "..:_deprecate_defines",
+        "../../src/api/units:time_delta",
+        "../../src/call:rtp_packet_sink_interface",
+        "../../src/modules/utility",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/modules/rtp_rtcp",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:location",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base/synchronization:mutex",
+        "../../src/rtc_base:time_utils",
+        "../../src/rtc_base:thread_checker",
+        "../../src/system_wrappers",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoPacketRouteFeeder") {
+    sources = [
+        "RTCVideoPacketRouteFeeder.cc",
+        "RTCVideoPacketRouteFeeder.h",
+    ]
+
+    deps = [
+        ":RTCVideoPacketRoutingSink",
+        "..:_deprecate_defines",
+        "../api:RTCPacketRouteSinkInterface",
+        "../api/video:RTCVideoPacketRouteSourceInterface",
+        "../../src/api/task_queue",
+        "../../src/modules/include:module",
+        "../../src/modules/utility",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/rtc_base:location",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base:time_utils",
+        "../../src/rtc_base:task_queue",
+        "../../src/rtc_base:constructor_magic",
+        "../../src/rtc_base/system:no_unique_address",
+        "../../src/rtc_base/task_utils:repeating_task",
+        "../../src/rtc_base/synchronization:mutex",
+        "../../src/system_wrappers",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoPacketRoutingSink") {
+    sources = [
+        "RTCVideoPacketRoutingSink.h",
+    ]
+
+    deps = [
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoReceiveStream2Impl") {
+    sources = [
+        "RTCVideoReceiveStream2Impl.cc",
+        "RTCVideoReceiveStream2Impl.h",
+    ]
+
+    deps = [
+        ":RTCRtpVideoPacketStreamReceiver",
+        "..:_deprecate_defines",
+        "../api/video:RTCVideoRtpPacketListenSinkInterface",
+        "../call:RTCVideoReceiveStream",
+        "../call:RTCRtxReceiveStream",
+        "../modules/feedback:RTCFeedbackPacketRouter",
+        "../../src_update/api:_video_codec",
+        "../../src/api:array_view",
+        "../../src/api/task_queue",
+        "../../src/api/units:timestamp",
+        "../../src/api/transport/rtp:rtp_source",
+        "../../src/api/video:video_codec_type",
+        "../../src/call:rtp_packet_sink_interface",
+        "../../src/call:syncable",
+        "../../src/call:rtp_stream_receiver_controller_interface",
+        "../../src/media/base:media_constants",
+        "../../src/modules/rtp_rtcp",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/modules/include:module_common_types",
+        "../../src/modules/utility",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:location",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base:stringutils",
+        "../../src/rtc_base/synchronization:sequence_checker",
+        "../../src/rtc_base/system:no_unique_address",
+        "../../src/rtc_base/system:thread_registry",
+        "../../src/rtc_base:time_utils",
+        "../../src/rtc_base:task_queue",
+        "../../src/rtc_base/task_utils:pending_task_safety_flag",
+        "../../src/video",
+        "../../src/system_wrappers",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoSendStreamImpl") {
+    sources = [
+        "RTCVideoSendStreamImpl.cc",
+        "RTCVideoSendStreamImpl.h",
+    ]
+
+    deps = [
+        ":RTCVideoSendStreamRouter",
+        ":RTCVideoPacketRouteFeeder",
+        "../api/video:RTCVideoPacketRouteSourceInterface",
+        "../call:RTCVideoSendStream",
+        "../call:RTCRtpTransportControllerSendInterface",
+        "../modules/feedback:RTCFeedbackPacketRouter",
+        "../../src/api/task_queue",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/modules/utility",
+        "../../src/rtc_base:event",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base:task_queue",
+        "../../src/rtc_base:thread_checker",
+        "..:_deprecate_defines",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoSendStreamRouter") {
+    sources = [
+        "RTCVideoSendStreamRouter.cc",
+        "RTCVideoSendStreamRouter.h",
+    ]
+
+    deps = [
+        ":RTCVideoPacketRoutingSink",
+        ":RTCVideoPacketRouteFeeder",
+        "..:_deprecate_defines",
+        "../call:RTCVideoSendStream",
+        "../call:RTCRtpTransportControllerSendInterface",
+        "../modules/rtp_rtcp:RTCRtpRtcpInterface",
+        "../modules/rtp_rtcp:RTCRtpRtcpSendImpl",
+        "../modules/feedback:RTCFeedbackPacketRouter",
+        "../modules/pacing:RTCPacketRouter",
+        "../../src/api:rtp_headers",
+        "../../src/rtc_base:location",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base:random",
+        "../../src/rtc_base:time_utils",
+        "../../src/rtc_base:task_queue",
+        "../../src/rtc_base:weak_ptr",
+        "../../src/rtc_base/task_utils:repeating_task",
+        "../../src/modules/include:module",
+        "../../src/modules/utility",
+        "../../src/modules/rtp_rtcp",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/modules/congestion_controller/rtp:transport_feedback",
+        "../../src/system_wrappers",
+    ]
+}

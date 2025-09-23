@@ -1,0 +1,27 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("RTCCallFactoryInterface") {
+    sources = [
+        "RTCCallFactoryInterface.h",
+    ]
+
+    deps = [
+        "../audio:RTCAudioRtpPacketListenSinkInterface",
+        "../..:_deprecate_defines",
+        "../..:RTCThreadManagerInterface",
+        "../../../src/rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("RTCGetNetworkEstimateInterface") {
+    sources = [
+        "RTCGetNetworkEstimateInterface.h",
+    ]
+}
+
+rtc_sfu_source_set("RTCTransportSequenceNumberGenerator") {
+    sources = [
+        "RTCTransportSequenceNumberGenerator.h",
+    ]
+}

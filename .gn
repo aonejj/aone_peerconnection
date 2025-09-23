@@ -1,0 +1,5 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+# The location of the build configuration file
+buildconfig = "//build/config/BUILDCONFIG.gn"
+

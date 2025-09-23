@@ -1,0 +1,175 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("call") {
+    deps = [
+        ":audio_sender",
+        ":flexfec_receive_stream",
+        ":packet_receiver",
+        ":rtp_bitrate_configurator",
+        ":rtp_config",
+        ":rtp_demuxer",
+        ":rtp_interfaces",
+        ":rtp_stream_receiver_controller",
+        ":rtx_receive_stream",
+        ":syncable",
+    ]
+}
+
+rtc_sfu_source_set("audio_sender") {
+    sources = [
+        "audio_sender.h",
+    ]
+
+    deps = [
+        "../api/audio:audio_frame",
+    ]
+}
+
+rtc_sfu_source_set("flexfec_receive_stream") {
+    sources = [
+        "flexfec_receive_stream.cc",
+        "flexfec_receive_stream.h",
+    ]
+
+    deps = [
+        ":rtp_packet_sink_interface",
+        "../api:transport_api",
+        "../api:rtp_headers",
+        "../api:rtp_parameters",
+        "../rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("packet_receiver") {
+    sources = [
+        "packet_receiver.h",
+    ]
+
+    deps = [
+        "../api:media_types",
+        "../rtc_base:copy_on_write_buffer",
+    ]
+}
+
+rtc_sfu_source_set("receive_time_calculator") {
+    sources = [
+        "receive_time_calculator.cc",
+        "receive_time_calculator.h",
+    ]
+
+    deps = [
+        "../api/units:time_delta",
+        "../rtc_base:safe_minmax",
+        "../rtc_base/experiments:field_trial_parser",
+        "../rtc_base:numerics",
+        "../system_wrappers:field_trial",
+    ]
+}
+
+rtc_sfu_source_set("rtp_bitrate_configurator") {
+    sources =[
+        "rtp_bitrate_configurator.cc",
+        "rtp_bitrate_configurator.h",
+    ]
+
+    deps = [
+        ":rtp_config",
+        "../api/transport:bitrate_settings",
+        "../api/units:data_rate",
+        "../rtc_base:constructor_magic",
+        "../rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("rtp_config") {
+    sources = [
+        "rtp_config.cc",
+        "rtp_config.h",
+    ]
+
+    deps = [
+        "../api:array_view",
+        "../api:rtp_headers",
+        "../api:rtp_parameters",
+        "../rtc_base:checks",
+        "../rtc_base:stringutils",
+    ]
+}
+
+rtc_sfu_source_set("rtp_demuxer") {
+    sources = [
+        "rtp_demuxer.cc",
+        "rtp_demuxer.h",
+    ]
+
+    deps = [
+        ":rtp_packet_sink_interface",
+        "../modules/rtp_rtcp:rtp_rtcp_format",
+        "../rtc_base:checks",
+        "../rtc_base:logging",
+        "../rtc_base:stringutils",
+    ]
+}
+
+rtc_sfu_source_set("rtp_interfaces") {
+    deps = [
+        ":rtp_config",
+        ":rtp_packet_sink_interface",
+        ":rtp_stream_receiver_controller_interface",
+    ]
+}
+
+rtc_sfu_source_set("rtp_packet_sink_interface") {
+    sources = [
+        "rtp_packet_sink_interface.h",
+    ]
+}
+
+rtc_sfu_source_set("rtp_stream_receiver_controller_interface") {
+    sources = [
+        "rtp_stream_receiver_controller_interface.h",
+    ]
+
+    deps = [
+        ":rtp_packet_sink_interface",
+    ]
+}
+
+rtc_sfu_source_set("rtp_stream_receiver_controller") {
+    sources = [
+        "rtp_stream_receiver_controller.cc",
+        "rtp_stream_receiver_controller.h",
+    ]
+
+    deps = [
+        ":rtp_stream_receiver_controller_interface",
+        ":rtp_demuxer",
+        "../modules/rtp_rtcp:rtp_rtcp_format",
+        "../rtc_base:logging",
+        "../rtc_base/synchronization:sequence_checker",
+    ]
+}
+
+rtc_sfu_source_set("rtx_receive_stream") {
+    sources = [
+        "rtx_receive_stream.cc",
+        "rtx_receive_stream.h",
+    ]
+
+    deps = [
+        ":rtp_packet_sink_interface",
+        "../api:array_view",
+        "../modules/rtp_rtcp",
+        "../modules/rtp_rtcp:rtp_rtcp_format",
+        "../rtc_base:checks",
+        "../rtc_base:logging",        
+    ]
+}
+
+rtc_sfu_source_set("syncable") {
+    sources = [
+        "syncable.cc",
+        "syncable.h",
+    ]
+}

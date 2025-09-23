@@ -1,0 +1,47 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("repeating_task") {
+    sources = [
+        "repeating_task.cc",
+        "repeating_task.h",
+    ]
+  
+    deps = [
+        "..:logging",
+        "..:time_utils",
+        "../synchronization:sequence_checker",
+        "../../api/task_queue",
+        ":pending_task_safety_flag",
+        "../../api/units:time_delta",
+        "../../api/units:timestamp",
+        "../../system_wrappers:system_wrappers",
+    ]
+}
+
+rtc_sfu_source_set("pending_task_safety_flag") {
+    sources = [
+        "pending_task_safety_flag.cc",
+        "pending_task_safety_flag.h",
+    ]
+
+    deps = [
+        "../../api:refcountedbase",
+        "../../api:scoped_refptr",
+        "../synchronization:sequence_checker",
+        "..:checks",
+        "../system:no_unique_address",
+        "../system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("to_queued_task") {
+    sources = [
+        "to_queued_task.h",
+    ]
+
+    deps = [
+        ":pending_task_safety_flag",
+        "../../api/task_queue:queued_task",
+    ]
+}

@@ -1,0 +1,87 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("engine") {
+    deps = [
+        ":RTCWebRTCVideoEngine",
+        ":RTCWebRTCVoiceEngine",
+    ]
+}
+
+rtc_sfu_source_set("RTCWebRTCVideoEngine") {
+    sources = [
+        "RTCWebRTCVideoEngine.cc",
+        "RTCWebRTCVideoEngine.h",
+    ]
+
+    deps = [
+        "../..:_deprecate_defines",
+        "../..:RTCThreadManagerInterface",
+        "../../call:RTCCall",
+        "../../call:RTCVideoReceiveStream",
+        "../../call:RTCVideoSendStream",
+        "../../../src_update/api:_video_codec",
+        "../../../src_update/media:_webrtc_media_engine_info",
+        "../../../src_update/media:_media_channel",
+        "../../../src_update/media:_media_engine",
+        "../../../src/api/crypto",
+        "../../../src/api:transport_api",
+        "../../../src/api:rtc_error",
+        "../../../src/api/video_codecs:video_stream",
+        "../../../src/call:rtp_config",
+        "../../../src/media/base:rtp_utils",
+        "../../../src/media/base:media_config",        
+        "../../../src/media/engine:constants",
+        "../../../src/media/engine:unhandled_packets_buffer",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:threading",
+        "../../../src/rtc_base:thread_checker",
+    ]
+}
+
+rtc_sfu_source_set("RTCWebRTCVoiceEngine") {
+    sources = [
+        "RTCWebRTCVoiceEngine.cc",
+        "RTCWebRTCVoiceEngine.h",
+    ]
+
+    deps = [
+        "../../api/audio:RTCAudioRtpPacketListenSinkInterface",
+        "../../call:RTCAudioSendStream",
+        "../../call:RTCAudioReceiveStream",
+        "../..:_deprecate_defines",
+        "../..:RTCThreadManagerInterface",
+        "../../../src_update/media:_webrtc_media_engine_info",
+        "../../../src_update/media:_media_channel",
+        "../../../src_update/media:_media_engine",        
+        "../../../src/api/audio_codecs",
+        "../../../src/api:call_api",
+        "../../../src/api:scoped_refptr",
+        "../../../src/api/task_queue",
+        "../../../src/api/transport/rtp:rtp_source",
+        "../../../src/api/transport:bitrate_settings",
+        "../../../src/media/base:rtp_utils",
+        "../../../src/media/base:audio_source",
+        "../../../src/media/base:media_constants",
+        "../../../src/media/base:stream_params",
+        "../../../src/media/engine:payload_type_mapper",
+        "../../../src/rtc_base:audio_format_to_string",
+        "../../../src/rtc_base:buffer",
+        "../../../src/rtc_base:helpers",
+        "../../../src/rtc_base:ignore_wundef",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:macromagic",
+        "../../../src/rtc_base:byte_order",
+        "../../../src/rtc_base/experiments:field_trial_parser",
+        "../../../src/rtc_base:network_route",
+        "../../../src/rtc_base:race_checker",
+        "../../../src/rtc_base:stringutils",
+        "../../../src/rtc_base:task_queue",
+        "../../../src/rtc_base/task_utils:pending_task_safety_flag",
+        "../../../src/rtc_base/task_utils:to_queued_task",
+        "../../../src/rtc_base/third_party/base64",
+        "../../../src/rtc_base:threading",
+        "../../../src/rtc_base:thread_checker",
+        "../../../src/system_wrappers"
+    ]
+}

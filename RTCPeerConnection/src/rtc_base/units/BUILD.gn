@@ -1,0 +1,12 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("unit_base") {
+    sources = [ "unit_base.h" ]
+
+    deps = [
+        "..:checks",
+        "..:divide_round",
+        "..:safe_conversions",
+    ]
+}

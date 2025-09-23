@@ -1,0 +1,49 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("audio_coding") {
+    deps = [
+        ":audio_coding_module_typedefs",
+        ":isac_bwinfo",
+        ":isac_vad",
+    ]
+}
+
+rtc_sfu_source_set("audio_coding_module_typedefs") {
+    sources = [
+        "include/audio_coding_module_typedefs.h",
+    ]
+
+    deps = [
+        "../../rtc_base:deprecation",
+    ]
+}
+
+rtc_sfu_source_set("isac_vad") {
+    sources = [
+        "codecs/isac/main/source/filter_functions.c",
+        "codecs/isac/main/source/filter_functions.h",
+        "codecs/isac/main/source/isac_vad.c",
+        "codecs/isac/main/source/isac_vad.h",
+        "codecs/isac/main/source/os_specific_inline.h",
+        "codecs/isac/main/source/pitch_estimator.c",
+        "codecs/isac/main/source/pitch_estimator.h",
+        "codecs/isac/main/source/pitch_filter.c",
+        "codecs/isac/main/source/pitch_filter.h",
+        "codecs/isac/main/source/settings.h",
+        "codecs/isac/main/source/structs.h",        
+    ]
+  
+    deps = [
+        ":isac_bwinfo",
+        "../../rtc_base:compile_assert_c",
+        "../../rtc_base/system:arch",
+        "../../rtc_base/system:ignore_warnings",
+        "../third_party/fft",
+    ]    
+}
+
+rtc_sfu_source_set("isac_bwinfo") {
+  sources = [ "codecs/isac/bandwidth_info.h" ]
+  deps = []
+}

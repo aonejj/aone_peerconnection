@@ -1,0 +1,58 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../../rtc_peerconnection.gni")
+
+group("rtp") {
+    deps = [
+        ":control_handler",
+        ":transport_feedback",
+    ]
+}
+
+rtc_sfu_source_set("control_handler") {
+    sources = [
+        "control_handler.cc",
+        "control_handler.h",
+    ]
+
+    deps = [
+        "../../pacing",        
+        "../../../api/transport:network_control",
+        "../../../api/units:data_rate",
+        "../../../api/units:data_size",
+        "../../../api/units:time_delta",
+        "../../../rtc_base:constructor_magic",
+        "../../../rtc_base:logging",
+        "../../../rtc_base:numerics",
+        "../../../rtc_base:safe_minmax",
+        "../../../rtc_base:safe_conversions",
+        "../../../rtc_base/synchronization:sequence_checker",
+        "../../../rtc_base/system:no_unique_address",
+        "../../../system_wrappers:field_trial",
+    ]
+}
+
+rtc_sfu_source_set("transport_feedback") {
+    sources = [
+        "transport_feedback_adapter.cc",
+        "transport_feedback_adapter.h",
+        "transport_feedback_demuxer.cc",
+        "transport_feedback_demuxer.h",
+    ]
+
+    deps = [
+        "../../include:module_common_types_public",
+        "../../rtp_rtcp:rtp_rtcp_format",
+        "../../../api/transport:network_control",
+        "../../../api/units:data_size",
+        "../../../api/units:timestamp",
+        "../../../rtc_base/network:sent_packet",
+        "../../../rtc_base:network_route",
+        "../../../rtc_base:threading",
+        "../../../rtc_base:checks",
+        "../../../rtc_base:logging",
+        "../../../rtc_base/synchronization:mutex",
+        "../../../rtc_base:thread_annotations",
+        "../../../rtc_base:thread_checker",
+        "../../../system_wrappers:field_trial",        
+    ]
+}

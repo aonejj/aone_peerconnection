@@ -1,0 +1,35 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+import("../rtc_peerconnection.gni")
+
+group("rtc_pc_src") {
+    deps = [
+        ":_deprecate_defines",
+        ":RTCThreadManagerInterface",
+        "api",
+        "audio",
+        "call",
+        "media",
+        "modules",
+        "pc",
+        "video",
+    ]
+}
+
+rtc_sfu_source_set("_deprecate_defines") {
+    sources = [
+        "_deprecate_defines.h",     # think... move to config gni
+    ]
+}
+
+rtc_sfu_source_set("RTCThreadManagerInterface") {
+    sources = [
+        "RTCThreadManagerInterface.h",
+    ]
+}
+
+rtc_sfu_source_set("RTCInvocableMessageHandler") {
+    sources = [
+        "RTCInvocableMessageHandler.h",
+    ]
+}

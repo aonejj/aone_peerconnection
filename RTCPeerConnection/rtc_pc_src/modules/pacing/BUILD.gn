@@ -1,0 +1,105 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("pacing") {
+    deps = [
+        ":RTCPacketRouter",
+        ":RTCPacingController",
+        ":RTCTaskQueuePacedSender",
+        ":RTCSFUPacingListener",
+        ":RTCSFUPacingController",
+    ]
+}
+
+rtc_sfu_source_set("RTCPacketRouter") {
+    sources = [
+        "RTCPacketRouter.cc",
+        "RTCPacketRouter.h",
+    ]
+
+    deps = [
+        ":RTCPacingController",
+        ":RTCSFUPacingListener",
+        "../..:_deprecate_defines",            
+        "../rtp_rtcp:RTCRtpRtcpInterface",
+        "../../../src/api/transport:network_control",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base/synchronization:sequence_checker",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+    ]
+}
+
+rtc_sfu_source_set("RTCPacingController") {
+    sources = [
+        "RTCPacingController.cc",
+        "RTCPacingController.h",
+    ]
+
+    deps = [
+        "../../../src/api/transport:network_control",
+        "../../../src/modules/pacing:pacing",
+        "../../../src/modules/pacing:interval_budget",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:time_utils",
+        "../../../src/rtc_base:thread_annotations",
+        "../../../src/system_wrappers:system_wrappers",
+    ]
+}
+
+rtc_sfu_source_set("RTCTaskQueuePacedSender") {
+    sources = [
+        "RTCTaskQueuePacedSender.cc",
+        "RTCTaskQueuePacedSender.h",
+    ]
+
+    deps = [
+        ":RTCPacingController",
+        ":RTCSFUPacingListener",
+        ":RTCSFUPacingController",
+        "../..:_deprecate_defines",
+        "../rtp_rtcp:RTCRtpRtcpInterface",
+        "../../../src/api/units:data_rate",
+        "../../../src/api/units:time_delta",
+        "../../../src/api/units:timestamp",
+        "../../../src/api/transport:network_control",
+        "../../../src/modules/pacing:pacing",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:numerics",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:time_utils",
+        "../../../src/rtc_base/task_utils:pending_task_safety_flag",
+    ]    
+}
+
+rtc_sfu_source_set("RTCSFUPacingListener") {
+       public = [
+        "RTCSFUPacingListener.h",
+    ]
+
+    deps = [
+        "../rtp_rtcp:RTCRtpRtcpInterface",
+    ]
+}
+
+rtc_sfu_source_set("RTCSFUPacingController") {
+    sources = [
+        "RTCSFUPacingController.cc",
+        "RTCSFUPacingController.h",
+    ]
+
+    deps = [
+        ":RTCPacingController",
+        "../../../src/api/transport:network_control",
+        "../../../src/modules/pacing:pacing",
+        "../../../src/modules/pacing:interval_budget",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:time_utils",
+        "../../../src/rtc_base:thread_annotations",
+        "../../../src/system_wrappers:system_wrappers",
+    ]
+}

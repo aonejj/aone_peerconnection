@@ -1,0 +1,465 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("api") {
+    sources = [
+        "jsep_session_description.h",
+        "set_local_description_observer_interface.h",
+        "set_remote_description_observer_interface.h",            
+        "uma_metrics.h",
+    ]
+
+    deps = [
+        ":array_view",
+        ":audio_options",
+        ":bitrate_allocation",
+        ":candidate",
+        ":call_api",
+        ":crypto_params",
+        ":data_channel_interface",
+        ":dtls_transport_interface",
+        ":function_view",
+        ":ice_transport_factory",
+        ":ice_transport_interface",
+        ":jsep",
+        ":jsep_ice_candidate",
+        ":make_ref_counted",
+        ":media_stream_proxy",
+        ":network_state_predictor",
+        ":packet_socket_factory",
+        ":priority",
+        ":proxy",
+        ":refcountedbase",
+        ":rtc_error",
+        ":rtc_event_log_output",
+        ":rtp_headers",        
+        ":rtp_packet_info",
+        ":rtp_parameters",
+        ":rtp_transceiver_direction",
+        ":scoped_refptr",
+        ":transport_api",
+        ":turn_customizer",
+        ":sctp_transport_interface",
+        "audio",
+        "audio_codecs",
+        "crypto",
+        "rtc_event_log",
+        "task_queue",
+        "transport",
+        "transport/rtp:rtp_source",
+        "units",
+        "video",
+        "video_codecs",
+        "../p2p",
+        "../call",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base:constructor_magic",
+        "../rtc_base:deprecation",
+        "../rtc_base:logging",
+        "../rtc_base:network",
+        "../rtc_base:network_constants",
+        "../rtc_base:ref_count",
+        "../rtc_base:rtc_certificate_generator",
+        "../rtc_base:ssl",
+        "../rtc_base:stringutils",
+        "units:data_rate",
+        "units:timestamp",
+        "video:encoded_image",
+        "video:video_bitrate_allocator_factory",
+        "video:video_frame_type",
+        "video:video_codec_type",
+        "video:video_rtp_headers",
+        "video_codecs:video_codecs_api",
+    ]
+}
+
+rtc_sfu_source_set("array_view") {
+    sources = [
+        "array_view.h",
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+        "../rtc_base:type_traits",
+    ]    
+}
+
+rtc_sfu_source_set("audio_options") {
+    sources = [
+        "audio_options.cc",
+        "audio_options.h",
+    ]
+
+    deps = [
+        "../api:array_view",
+        "../rtc_base:stringutils",    
+        "../rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("bitrate_allocation") {
+    sources = [
+        "call/bitrate_allocation.h",
+    ]
+
+    deps = [
+        "units:data_rate",
+        "units:time_delta",
+    ]
+}
+
+rtc_sfu_source_set("candidate") {
+    sources = [
+        "candidate.cc",
+        "candidate.h",
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+        "../rtc_base:helpers",
+        "../rtc_base:ip_address",
+        "../rtc_base:logging",
+        "../rtc_base:network_constants",
+        "../rtc_base:socket_address",
+        "../rtc_base:ssl",
+        "../rtc_base:stringutils",
+        "../rtc_base/system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("call_api") {
+    sources = [
+        "call/audio_sink.h"
+    ]
+}
+
+rtc_sfu_source_set("crypto_params") {
+    sources = [
+        "crypto_params.h",
+    ]
+}
+
+rtc_sfu_source_set("data_channel_interface") {
+    sources = [
+        "data_channel_interface.cc",
+        "data_channel_interface.h",
+    ]
+
+    deps = [
+        ":ice_transport_interface",
+        ":priority",
+        ":rtc_error",
+        ":scoped_refptr",
+        "../rtc_base:checks",
+        "../rtc_base:copy_on_write_buffer",
+        "../rtc_base:ref_count",
+        "../rtc_base:ssl",
+        "../rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("dtls_transport_interface") {
+    sources = [
+        "dtls_transport_interface.cc",
+        "dtls_transport_interface.h",
+    ]
+
+    deps = [
+        ":ice_transport_interface",
+        ":rtc_error",
+        ":scoped_refptr",
+        "../rtc_base:ref_count",
+        "../rtc_base:ssl",
+        "../rtc_base/system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("function_view") {
+    sources = [
+        "function_view.h",
+    ]
+
+    deps = [ 
+        "../rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("ice_transport_factory") {
+    sources = [
+        "ice_transport_factory.cc",
+        "ice_transport_factory.h",
+    ]
+
+    deps = [
+        ":ice_transport_interface",
+        ":scoped_refptr",
+        "../../rtc_pc_src:_deprecate_defines",
+        "../../rtc_pc_src:RTCThreadManagerInterface",
+        "../p2p:base",
+        "../rtc_base:threading",
+        "../rtc_base/system:rtc_export",
+        "rtc_event_log",
+    ]    
+}
+
+rtc_sfu_source_set("ice_transport_interface") {
+    sources = [ 
+        "ice_transport_interface.h",
+    ]
+
+    deps = [
+        ":packet_socket_factory",
+        ":rtc_error",
+        ":scoped_refptr",
+        "../rtc_base:ref_count",
+        "rtc_event_log",
+    ]    
+}
+
+rtc_sfu_source_set("jsep") {
+    sources = [
+        "jsep.cc",
+        "jsep.h",
+    ]
+
+    deps = [
+        ":rtc_error",
+        "../rtc_base:deprecation",
+        "../rtc_base:ref_count",
+        "../rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("jsep_ice_candidate") {
+    sources = [
+        "jsep_ice_candidate.cc",
+        "jsep_ice_candidate.h",
+    ]
+
+    deps = [
+        ":candidate",
+        ":jsep",
+        "../rtc_base:constructor_magic",
+        "../rtc_base/system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("make_ref_counted") {
+    sources = [
+        "make_ref_counted.h",
+    ]
+
+    deps = [ 
+        "../rtc_base:ref_count",
+    ]
+}
+
+rtc_sfu_source_set("media_stream_proxy") {
+    sources = [
+        "media_stream_proxy.h",
+        "media_stream_track.h",
+    ]
+
+    deps = [
+        ":notifier",
+        ":make_ref_counted",
+        ":proxy",
+        "../../src_update/api:_media_stream_interface",
+    ]
+}
+
+rtc_sfu_source_set("notifier") {
+    sources = [
+        "notifier.h",
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+        "../../src_update/api:_media_stream_interface",
+    ]
+}
+
+rtc_sfu_source_set("network_state_predictor") {
+    sources = [
+        "network_state_predictor.h",
+    ]
+}
+
+rtc_sfu_source_set("packet_socket_factory") {
+    sources = [
+        "async_resolver_factory.h",
+        "packet_socket_factory.h",
+    ]
+
+    deps = [
+        "../rtc_base:async_packet_socket",
+        "../rtc_base:async_resolver_interface",
+        "../rtc_base:proxy_info",
+        "../rtc_base:socket_address",
+        "../rtc_base/system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("priority") {
+    sources = [
+        "priority.h",
+    ]
+}
+
+rtc_sfu_source_set("proxy") {
+    sources = [
+        "proxy.cc",
+        "proxy.h",
+    ]
+
+    deps = [
+        ":scoped_refptr",
+        "task_queue",
+        "../rtc_base:event",
+        "../rtc_base:stringutils",
+        "../rtc_base/system:rtc_export",
+        "../rtc_base:threading",
+    ]
+}
+
+rtc_sfu_source_set("refcountedbase") {
+    sources = [
+        "ref_counted_base.h",
+    ]
+
+    deps = [
+        "../rtc_base:constructor_magic",
+        "../rtc_base:macromagic",
+        "../rtc_base:ref_count",
+    ]    
+}
+
+rtc_sfu_source_set("rtc_error") {
+    sources = [
+        "rtc_error.cc",
+        "rtc_error.h",
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+        "../rtc_base:logging",
+        "../rtc_base:macromagic",
+        "../rtc_base/system:rtc_export",
+    ]    
+}
+
+rtc_sfu_source_set("rtc_event_log_output") {
+    sources = [
+        "rtc_event_log_output.h",
+    ]
+}
+
+rtc_sfu_source_set("rtp_packet_info") {
+    sources = [
+        "rtp_packet_info.cc",
+        "rtp_packet_info.h",
+        "rtp_packet_infos.h",
+    ]
+
+    deps = [
+        ":array_view",
+        ":make_ref_counted",
+        ":refcountedbase",
+        ":rtp_headers",
+        ":scoped_refptr",
+        "../rtc_base/system:rtc_export",
+        "units:time_delta",
+        "units:timestamp",
+    ]
+}
+
+rtc_sfu_source_set("rtp_headers") {
+    sources = [
+        "rtp_headers.cc",
+        "rtp_headers.h",
+    ]
+
+    deps = [
+        ":array_view",
+        "units:timestamp",
+        "video:video_rtp_headers",
+    ]    
+}
+
+rtc_sfu_source_set("media_types") {
+    sources = [
+        "media_types.cc",
+        "media_types.h",
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+        "../rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("rtp_parameters") {
+    sources = [
+        "rtp_parameters.cc",
+        "rtp_parameters.h",
+    ]
+
+    deps = [
+        ":media_types",
+        ":array_view",
+        ":priority",
+        ":rtp_transceiver_direction",
+        "../rtc_base:checks",
+        "../rtc_base:stringutils",
+        "../rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("rtp_transceiver_direction") {
+    sources = [
+        "rtp_transceiver_direction.h",
+    ]
+}
+
+rtc_sfu_source_set("scoped_refptr") {
+    sources = [
+        "scoped_refptr.h",
+    ]
+}
+
+rtc_sfu_source_set("transport_api") {
+    sources = [
+        "call/transport.cc",
+        "call/transport.h",
+    ]
+
+    deps = [
+        ":array_view",
+        ":refcountedbase",
+        ":scoped_refptr",
+    ]
+}
+
+rtc_sfu_source_set("turn_customizer") {
+    sources = [
+        "turn_customizer.h",
+    ]
+
+    deps = [
+        "transport:stun_types",
+    ]
+}
+
+rtc_sfu_source_set("sctp_transport_interface") {
+    sources = [
+        "sctp_transport_interface.cc",
+        "sctp_transport_interface.h",
+    ]
+
+    deps = [
+        ":dtls_transport_interface",
+        ":rtc_error",
+        ":scoped_refptr",
+        "../rtc_base:ref_count",
+    ]
+}

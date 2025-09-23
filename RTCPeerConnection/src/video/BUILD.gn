@@ -1,0 +1,33 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("video") {
+    sources = [
+        "call_stats2.cc",
+        "call_stats2.h",
+        "stats_counter.cc",
+        "stats_counter.h",
+        "transport_adapter.cc",
+        "transport_adapter.h",                
+    ]
+
+    deps = [
+        "../api/units:timestamp",
+        "../modules/include:module_common_types",
+        "../modules/rtp_rtcp",
+        "../modules/rtp_rtcp:rtp_rtcp_format",
+        "../modules/utility",
+        "../rtc_base:checks",
+        "../rtc_base:constructor_magic",
+        "../rtc_base:logging",
+        "../rtc_base:location",
+        "../rtc_base:macromagic",
+        "../rtc_base:stringutils",
+        "../rtc_base:task_queue",
+        "../rtc_base/task_utils:pending_task_safety_flag",
+        "../rtc_base/task_utils:to_queued_task",
+        "../rtc_base/task_utils:repeating_task",
+        "../system_wrappers",
+        "../api:transport_api",
+    ]
+}

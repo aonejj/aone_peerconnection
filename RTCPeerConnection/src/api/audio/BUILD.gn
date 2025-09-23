@@ -1,0 +1,26 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("audio") {
+    deps = [
+        ":audio_frame",
+    ]
+}
+
+rtc_sfu_source_set("audio_frame") {
+    sources = [
+        "audio_frame.cc",
+        "audio_frame.h",
+        "channel_layout.cc",
+        "channel_layout.h",
+    ]
+
+    deps = [
+        "..:rtp_packet_info",
+        "../../rtc_base:checks",
+        "../../rtc_base:constructor_magic",
+        "../../rtc_base:logging",
+        "../../rtc_base:macromagic",
+        "../../rtc_base:time_utils",
+    ]
+}

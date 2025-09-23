@@ -1,0 +1,25 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("audio_codecs") {
+    sources = [
+        "opus/audio_encoder_opus_config.cc",
+        "opus/audio_encoder_opus_config.h",
+        "audio_codec_pair_id.cc",
+        "audio_codec_pair_id.h",
+        "audio_format.cc",
+        "audio_format.h",
+    ]
+
+    deps = [
+        "..:array_view",
+        "..:bitrate_allocation",
+        "..:make_ref_counted",
+        "..:scoped_refptr",
+        "../../rtc_base:checks",
+        "../../rtc_base:ref_count",
+        "../../rtc_base:sanitizer",        
+        "../../rtc_base/system:rtc_export",
+        "../units:time_delta",
+    ]
+}

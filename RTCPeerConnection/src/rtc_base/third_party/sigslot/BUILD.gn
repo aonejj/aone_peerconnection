@@ -1,0 +1,9 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("sigslot") {
+    sources = [
+        "sigslot.cc",
+        "sigslot.h",
+    ]
+}

@@ -1,0 +1,26 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+config("feature_flags") {
+  defines = []
+}
+
+# Debug/release
+config("debug") {
+  defines = [
+    "_DEBUG",
+  ]
+}
+
+config("release") {
+  defines = [ "NDEBUG" ]
+}
+
+config("default_libs") {
+  if(is_linux) {
+    libs = [
+      "dl",
+      "pthread",
+      "rt",
+    ]
+  }
+}

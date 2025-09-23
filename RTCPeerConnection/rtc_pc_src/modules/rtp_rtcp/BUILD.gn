@@ -1,0 +1,211 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+group("rtp_rtcp") {
+    deps = [
+        ":RTCRtcpReceiver",
+        ":RTCRtcpSender",
+        ":RTCRtpPacketRedundancyChecker",
+        ":RTCRtpRtcpInterface",
+        ":RTCRtpRtcpRecvImpl",
+        ":RTCRtpRtcpSendImpl",
+        ":RTCRtpSenderEgress",
+        ":RTCRtpSender",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtcpReceiver") {
+    sources = [
+        "source/RTCRtcpReceiver.cc",
+        "source/RTCRtcpReceiver.h"
+    ]
+
+    deps = [
+        ":RTCRtpRtcpInterface",
+        "../..:_deprecate_defines",
+        "../../../src/api:array_view",
+        "../../../src/api/units:time_delta",
+        "../../../src/api/video:video_bitrate_allocation",
+        "../../../src/api/video:video_bitrate_allocator",
+        "../../../src/modules/rtp_rtcp",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/modules/rtp_rtcp:rtcp_time_util",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base/containers:flat_map",
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base/synchronization:sequence_checker",
+        "../../../src/rtc_base/system:no_unique_address",
+        "../../../src/rtc_base:thread_annotations",
+        "../../../src/rtc_base:time_utils",
+        "../../../src/system_wrappers",
+        "../../../src/system_wrappers:ntp_time",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtcpSender") {
+    sources = [
+        "source/RTCRtcpSender.cc",
+        "source/RTCRtcpSender.h",
+    ]
+
+    deps = [
+        ":RTCRtpRtcpInterface",
+        ":RTCRtcpReceiver",
+        "../..:_deprecate_defines",
+        "../../../src/api/rtc_event_log",
+        "../../../src/api:rtp_headers",
+        "../../../src/api:transport_api",
+        "../../../src/api/units:time_delta",
+        "../../../src/api/units:timestamp",
+        "../../../src/api/video:video_bitrate_allocation",
+        "../../../src/modules/remote_bitrate_estimator",
+        "../../../src/modules/rtp_rtcp",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/modules/rtp_rtcp:rtcp_time_util",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:numerics",
+        "../../../src/rtc_base:random",
+        "../../../src/rtc_base:safe_conversions",
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base:thread_annotations",
+        "../../../src/rtc_base:time_utils",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpPacketRedundancyChecker") {
+    sources = [
+        "source/RTCRtpPacketRedundancyChecker.cc",
+        "source/RTCRtpPacketRedundancyChecker.h",
+    ]
+
+    deps = [
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:ref_count",
+        "../../../src/rtc_base:constructor_magic",
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base:thread_annotations",
+        "../../../src/system_wrappers",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpRtcpInterface") {
+    sources = [
+        "source/RTCRtpRtcpInterface.h",
+    ]
+
+    deps = [
+        "../../../src/api/video:video_bitrate_allocator",
+        "../../../src/modules/rtp_rtcp",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:constructor_magic",
+        "../../../src/system_wrappers:ntp_time",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpRtcpRecvImpl") {
+    sources = [
+        "source/RTCRtpRtcpRecvImpl.cc",
+        "source/RTCRtpRtcpRecvImpl.h",
+    ]
+
+    deps = [
+        ":RTCRtpRtcpInterface",
+        ":RTCRtcpSender",
+        ":RTCRtcpReceiver",
+        "../../../src/api:rtp_headers",
+        "../../../src/api/task_queue",
+        "../../../src/api/video:video_bitrate_allocation",
+        "../../../src/modules/include:module_fec_types",
+        "../../../src/modules/remote_bitrate_estimator",
+        "../../../src/modules/rtp_rtcp",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/modules/rtp_rtcp:rtcp_time_util",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base/system:no_unique_address",
+        "../../../src/rtc_base/task_utils:pending_task_safety_flag",
+        "../../../src/rtc_base/task_utils:repeating_task",
+        "../../../src/system_wrappers",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpRtcpSendImpl") {
+    sources = [
+        "source/RTCRtpRtcpSendImpl.cc",
+        "source/RTCRtpRtcpSendImpl.h",
+    ]
+
+    deps = [
+        ":RTCRtpRtcpInterface",
+        ":RTCRtcpSender",
+        ":RTCRtcpReceiver",
+        ":RTCRtpSenderEgress",
+        ":RTCRtpSender",
+        "../../api/call:RTCTransportSequenceNumberGenerator",
+        "../../call:RTCVideoSendStream",
+        "../../call:RTCAudioSendStream",
+        "../../../src/api/task_queue",
+        "../../../src/modules/rtp_rtcp",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/modules/rtp_rtcp:rtcp_time_util",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:ref_count",
+        "../../../src/rtc_base:rate_statistics",
+        "../../../src/rtc_base/synchronization:sequence_checker",
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base/task_utils:pending_task_safety_flag",
+        "../../../src/rtc_base/task_utils:repeating_task",
+        "../../../src/system_wrappers",
+        "../..:_deprecate_defines",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpSenderEgress") {
+    sources = [
+        "source/RTCRtpSenderEgress.cc",
+        "source/RTCRtpSenderEgress.h"
+    ]
+
+    deps = [
+        ":RTCRtpRtcpInterface",
+        "../../../src/api:transport_api",
+        "../../../src/api/task_queue:task_queue",
+        "../../../src/api/units:data_rate",
+        "../../../src/api/units:time_delta",
+        "../../../src/api/units:timestamp",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/modules/include:module_fec_types",
+        "../../../src/rtc_base/task_utils:pending_task_safety_flag",
+        "../../../src/rtc_base:bitrate_tracker",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base/synchronization:mutex",
+        "../../../src/rtc_base/synchronization:sequence_checker",
+        "../../../src/rtc_base/task_utils:repeating_task",
+        "../../../src/rtc_base:thread_annotations",
+        "../../../rtc_pc_src/api/call:RTCTransportSequenceNumberGenerator",
+        "../..:_deprecate_defines",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpSender") {
+    sources = [
+        "source/RTCRtpSender.cc",
+        "source/RTCRtpSender.h"
+    ]
+
+    deps = [
+        ":RTCRtpRtcpInterface",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp",
+        "../../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../../src/rtc_base:safe_minmax",
+        "../../../src/rtc_base:checks",
+        "../../../src/rtc_base:logging",
+        "../../../src/rtc_base:random",
+        "../../../src/rtc_base/synchronization:mutex",
+    ]
+}

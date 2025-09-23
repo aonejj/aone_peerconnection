@@ -1,0 +1,49 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("sctp") {
+    sources = [
+        "sctp_transport.cc",
+        "sctp_transport.h"
+    ]
+
+    deps = [
+        ":sctp_transport_internal",
+        "../base:codec",
+        "../base:media_constants",
+        "../base:stream_params",
+        "../../api/transport:sctp_transport_factory_interface",
+        "../../p2p:base",
+        "../../rtc_base:buffer",
+        "../../rtc_base:copy_on_write_buffer",  
+        "../../rtc_base:constructor_magic",  
+        "../../rtc_base:helpers",
+        "../../rtc_base:logging",
+        "../../rtc_base:macromagic",
+        "../../rtc_base:numerics",
+        "../../rtc_base:rtc_base",
+        "../../rtc_base:stringutils",
+        "../../rtc_base:safe_conversions",
+        "../../rtc_base/synchronization:mutex",
+        "../../rtc_base:thread_annotations",
+        "../../rtc_base:thread_checker",
+        "../../rtc_base/task_utils:pending_task_safety_flag",
+        "../../rtc_base/third_party/sigslot",
+        "../../rtc_base:threading",
+        "../../../src_update/media:_media_channel",
+    ]
+}
+
+rtc_sfu_source_set("sctp_transport_internal") {
+    sources = [
+        "sctp_transport_internal.h",
+    ]
+
+    deps = [
+        "../../p2p:base",
+        "../../rtc_base:constructor_magic",
+        "../../rtc_base:copy_on_write_buffer",
+        "../../rtc_base:threading",
+        "../../../src_update/media:_media_channel",
+    ]
+}

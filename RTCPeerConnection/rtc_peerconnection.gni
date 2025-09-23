@@ -1,0 +1,62 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+
+rtc_root = get_path_info(".", "abspath")
+rtc_common_configs = [ rtc_root + ":RTCCommonConfig" ]
+rtc_peerconnection_link_configs = [rtc_root + ":RTCPeerConnectionLinkConfig" ]
+rtc_peerconnection_static_link_configs = [rtc_root + ":RTCPeerConnectionStaticLinkConfig" ]
+rtc_srtp_configs = [ rtc_root + ":RTCSrtpConfig" ]
+
+
+set_defaults("rtc_sfu_source_set") {
+    configs = rtc_common_configs
+    configs += rtc_peerconnection_static_link_configs
+}
+
+set_defaults("rtc_sfu_srtp_source_set") {
+    configs = rtc_srtp_configs
+    configs += rtc_peerconnection_static_link_configs
+}
+
+set_defaults("rtc_sfu_shared_library") {
+    configs = rtc_peerconnection_link_configs
+}
+
+template("rtc_sfu_shared_library") {
+  shared_library(target_name) {
+    forward_variables_from(invoker,
+                           "*",
+                           [
+                             "configs",
+                           ])
+    if (defined(invoker.configs)) {
+      configs += invoker.configs
+    }
+  }
+}
+
+template("rtc_sfu_source_set") {
+  source_set(target_name) {
+    forward_variables_from(invoker,
+                           "*",
+                           [
+                            "configs", 
+                           ])
+    if (defined(invoker.configs)) {
+      configs += invoker.configs
+    }  
+  }
+}
+
+template("rtc_sfu_srtp_source_set") {
+  source_set(target_name) {
+    forward_variables_from(invoker,
+                           "*",
+                           [
+                            "configs", 
+                           ])
+    if (defined(invoker.configs)) {
+      configs += invoker.configs
+    }  
+  }
+}

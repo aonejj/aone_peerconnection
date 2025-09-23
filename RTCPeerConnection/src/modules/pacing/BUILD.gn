@@ -1,0 +1,47 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("pacing") {
+    sources = [
+        "bitrate_prober.cc",
+        "bitrate_prober.h",
+        "prioritized_packet_queue.cc",
+        "prioritized_packet_queue.h",
+        "rtp_packet_pacer.h",
+    ]
+
+    deps = [
+        ":interval_budget",
+        "../rtp_rtcp:rtp_rtcp_format",
+        "../../api:function_view",
+        "../../api/rtc_event_log",
+        "../../api/transport:network_control",
+        "../../api/task_queue:task_queue",
+        "../../api/units:data_rate",
+        "../../api/units:data_size",
+        "../../api/units:time_delta",
+        "../../api/units:timestamp",
+        "../../rtc_base/experiments:field_trial_parser",
+        "../../rtc_base:checks",
+        "../../rtc_base:logging",
+        "../../rtc_base:numerics",
+        "../../rtc_base/system:unused",
+        "../../rtc_base/synchronization:sequence_checker",
+        "../../rtc_base:task_queue",
+        "../../rtc_base:threading",
+        "../../rtc_base:time_utils",
+        "../../rtc_base:thread_annotations",
+        "../../system_wrappers",    
+    ]
+}
+
+rtc_sfu_source_set("interval_budget") {
+    sources = [
+        "interval_budget.cc",
+        "interval_budget.h",
+    ]
+
+    deps = [
+        "../../rtc_base:safe_conversions",
+    ]
+}

@@ -1,0 +1,20 @@
+# Copyright (c) 2024 The AONE SFU project authors
+
+group("abseil") {
+    deps = [
+        ":abseil_copy_to_target"
+    ]
+}
+
+copy("abseil_copy_to_target") {
+    sources = [
+        "abseil-cpp/build/absl/base/libabsl_base.so.0",
+        "abseil-cpp/build/absl/base/libabsl_throw_delegate.so.0",
+        "abseil-cpp/build/absl/strings/libabsl_strings.so.0",
+        "abseil-cpp/build/absl/strings/libabsl_strings_internal.so.0",
+        "abseil-cpp/build/absl/types/libabsl_bad_variant_access.so.0",
+        "abseil-cpp/build/absl/types/libabsl_bad_optional_access.so.0",
+    ]
+
+    outputs = [ "$root_out_dir/{{source_name_part}}" ]  
+}

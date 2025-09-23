@@ -1,0 +1,20 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("test") {
+    deps = [
+        ":field_trial",
+    ]
+}
+
+rtc_sfu_source_set("field_trial") {
+    sources = [
+        "field_trial.cc",
+        "field_trial.h",
+    ]
+
+    deps = [
+        "../rtc_base:checks",
+        "../system_wrappers:field_trial",        
+    ]
+}

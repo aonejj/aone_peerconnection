@@ -1,0 +1,244 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("api") {
+    deps = [
+        ":_rtc_media_stream_interface",
+        ":ConferenceNode",
+        ":RTCConnectionInterface",
+        ":RTCConnectionProxy",
+        ":RTCNode",
+        ":RTCNodeObserver",
+        ":RTCPacketRouteSinkInterface",
+        ":RTCReceivedPacketSinks",
+        ":RTCRtpReceiverInterface",
+        ":RTCRtpSenderInterface",
+        ":RTCRtpTransceiverInterface",
+    ]
+}
+
+rtc_sfu_source_set("_rtc_media_stream_interface") {
+    sources = [
+        "_rtc_media_stream_interface.h",
+    ]
+
+    deps = [
+        "../../src_update/api:_media_stream_interface",
+    ]
+}
+
+rtc_sfu_source_set("ConferenceNode") {
+    sources = [
+        "ConferenceNode.cc",
+        "ConferenceNode.h",
+    ]
+
+    deps = [
+        "../../src/rtc_base:ref_count",
+        "../../src/rtc_base:threading",
+    ]
+}
+
+rtc_sfu_source_set("RTCConnectionInterface") {
+    sources = [
+        "RTCConnectionInterface.h",
+    ]
+
+    deps = [
+        ":RTCRtpReceiverInterface",
+        ":RTCRtpTransceiverInterface",
+        "../../src_update/api:_peer_connection_interface_defs",
+        "../call:RTCCall",
+        "../pc:RTCChannel",
+        "../../src/api:data_channel_interface",
+        "../../src/api:jsep",
+        "../../src/api:rtc_error",
+        "../../src/api:sctp_transport_interface",
+        "../../src/pc:rtp_data_channel",
+        "../../src/pc:sctp_data_channel",
+        "../../src/p2p:base",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base:ref_count",
+        "../../src/rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("RTCConnectionProxy") {
+    sources = [
+        "RTCConnectionProxy.h",
+    ]
+
+    deps = [
+        ":RTCConnectionInterface",
+        "../../src_update/api:_peer_connection_interface_defs",
+        "../../src/api:jsep",
+        "../../src/api:make_ref_counted",
+        "../../src/api:proxy",
+    ]
+}
+
+rtc_sfu_source_set("RTCNode") {
+    sources = [
+        "RTCNode.cc",
+        "RTCNode.h",
+    ]
+
+    deps = [
+        ":_rtc_media_stream_interface",
+        ":ConferenceNode",
+        ":RTCConnectionInterface",
+        ":ThreadsInfoInterface",
+        ":RTCRtpReceiverInterface",
+        ":RTCNodeObserver",
+        ":RTCReceivedPacketSinks",
+        ":RTCRtpSenderInterface",
+        ":RTCConnectionProxy",
+        "call:RTCCallFactoryInterface",
+        "audio:RTCAudioRtpPacketListenerProxy",
+        "video:RTCVideoRtpPacketListenerProxy",
+        "..:_deprecate_defines",
+        "..:RTCThreadManagerInterface",
+        "../call:RTCCall",
+        "../call:RTCCallFactory",
+        "../media/base:RTCVideoRouteTrackSource",
+        "../media/base:RTCAudioRouteTrackSource",
+        "../pc:RTCConnection",
+        "../pc:RTCAudioRouteTrack",
+        "../pc:RTCVideoRouteTrack",
+        "../pc:RTCCreateSdpObserver",
+        "../../rtc_pc_src:RTCInvocableMessageHandler",
+        "../../src_update/api:_media_stream_interface",
+        "../../src_update/api:_peer_connection_interface_defs",
+        "../../src/api:rtc_error",
+        "../../src/api:scoped_refptr",
+        "../../src/api/task_queue",
+        "../../src/api/task_queue:default_task_queue_factory",
+        "../../src/api:data_channel_interface",
+        "../../src/rtc_base:bind",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base:threading",
+    ]
+}
+
+rtc_sfu_source_set("RTCNodeObserver") {
+    sources = [
+        "RTCNodeObserver.h",
+    ]
+
+    deps = [
+        ":RTCRtpReceiverInterface",
+        ":RTCRtpTransceiverInterface",
+        "../../src_update/api:_peer_connection_interface_defs",
+        "../../src/api:data_channel_interface",
+        "../../src/api:jsep",
+        "../../src/api:rtc_error",
+        "../../src/rtc_base:ref_count",        
+    ]
+}
+
+rtc_sfu_source_set("RTCPacketRouteSinkInterface") {
+    sources = [
+        "RTCPacketRouteSinkInterface.h",
+    ]
+
+    deps = [
+        "../../src/api:transport_api",
+        "../../src/rtc_base:checks",
+    ]
+}
+
+rtc_sfu_source_set("RTCReceivedPacketSinks") {
+    sources = [
+        "RTCReceivedPacketSinks.h",
+    ]
+
+    deps = [
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpReceiverInterface") {
+    sources = [
+        "RTCRtpReceiverInterface.cc",
+        "RTCRtpReceiverInterface.h",
+    ]
+
+    deps = [
+        "../../src_update/api:_media_stream_interface",
+        "../../src/api:dtls_transport_interface",
+        "../../src/api:media_types",
+        "../../src/api:proxy",
+        "../../src/api:rtp_parameters",
+        "../../src/api:scoped_refptr",
+        "../../src/api:make_ref_counted",
+        "../../src/api/transport/rtp:rtp_source",
+        "../../src/rtc_base:deprecation",
+        "../../src/rtc_base:ref_count",
+        "../../src/rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpSenderInterface") {
+    sources = [
+        "RTCRtpSenderInterface.cc",
+        "RTCRtpSenderInterface.h",
+    ]
+
+    deps = [
+        "../../src_update/api:_media_stream_interface",
+        "../../src/api:dtls_transport_interface",
+        "../../src/api:media_types",
+        "../../src/api:proxy",
+        "../../src/api:rtp_parameters",
+        "../../src/api:rtc_error",
+        "../../src/api:scoped_refptr",
+        "../../src/api:make_ref_counted",
+        "../../src/rtc_base:ref_count",
+        "../../src/rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpTransceiverInterface") {
+    sources = [
+        "RTCRtpTransceiverInterface.cc",
+        "RTCRtpTransceiverInterface.h",
+    ]
+
+    deps = [
+        ":RTCRtpSenderInterface",
+        ":RTCRtpReceiverInterface",
+        "../../src/api:array_view",
+        "../../src/api:media_types",
+        "../../src/api:rtp_parameters",
+        "../../src/api:rtc_error",
+        "../../src/api:rtp_transceiver_direction",
+        "../../src/api:scoped_refptr",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:ref_count",
+        "../../src/rtc_base:deprecation",
+        "../../src/rtc_base/system:rtc_export",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoTrackSourceProxy") {
+    sources = [
+        "RTCVideoTrackSourceProxy.h",
+    ]
+
+    deps = [
+        "../../src_update/api:_media_stream_interface",
+        "../../src/api:proxy",
+    ]
+}
+
+rtc_sfu_source_set("ThreadsInfoInterface") {
+    sources = [
+        "ThreadsInfoInterface.h",
+    ]
+
+    deps = [
+        "../../src/rtc_base:threading",
+    ]
+}

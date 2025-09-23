@@ -1,0 +1,16 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+group("modules") {
+    deps = [
+        "audio_coding",
+        "audio_processing",
+        "congestion_controller",
+        "include",
+        "pacing",
+        "remote_bitrate_estimator",
+        "rtp_rtcp",
+        "third_party/fft",
+        "utility",
+        "video_coding",
+    ]
+}

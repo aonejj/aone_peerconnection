@@ -1,0 +1,112 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+
+import("rtc_peerconnection.gni")
+
+group("RTCPeerConnection") {
+    deps = [
+        ":librtc_peerconnection",
+    ]
+}
+
+config("RTCCommonConfig") {
+    defines = [
+        "DCHECK_ALWAYS_ON",
+        "WEBRTC_OPUS_VARIABLE_COMPLEXITY",
+        "UNUSED_TRACE_EVENT",
+        "UNUSED_PEER_CONNECTION",
+        "UNUSED_GTEST",
+        "HAVE_NETINET_IN_H",
+        "RTC_DISABLE_METRICS",
+    ]
+
+    if(is_linux) {
+        defines += [
+            "WEBRTC_LINUX",
+            "WEBRTC_POSIX",
+        ]
+    }
+
+    include_dirs = [
+        "src",
+        "src/third_party/libsrtp/include",
+        "src/third_party/libsrtp/config",
+        "src/third_party/libsrtp/crypto/include",
+        "third_party/usrsctp/include",
+        "third_party/boringssl/include",   
+        "third_party/abseil/abseil-cpp",
+    ]
+
+    cflags_cc = [
+        "-Wno-multichar",
+        "-fno-use-cxa-atexit",
+    ]
+
+}
+
+config("RTCPeerConnectionLinkConfig") {
+    ldflags = [
+        "-Wl,-rpath=\$ORIGIN",        
+        "-Wl,-Bsymbolic",
+        "-Wl,--no-undefined",
+    ]
+
+    lib_dirs = [
+        "$root_out_dir",
+    ]
+}
+
+config("RTCPeerConnectionStaticLinkConfig") {
+  libs = [
+    rebase_path("./third_party/abseil/abseil-cpp/build_static/absl/base/libabsl_base.a", "."),
+    rebase_path("./third_party/abseil/abseil-cpp/build_static/absl/base/libabsl_throw_delegate.a", "."),
+    rebase_path("./third_party/abseil/abseil-cpp/build_static/absl/strings/libabsl_strings.a", "."),
+    rebase_path("./third_party/abseil/abseil-cpp/build_static/absl/strings/libabsl_strings_internal.a", "."),
+    rebase_path("./third_party/abseil/abseil-cpp/build_static/absl/types/libabsl_bad_variant_access.a", "."),
+    rebase_path("./third_party/abseil/abseil-cpp/build_static/absl/types/libabsl_bad_optional_access.a", "."),
+    rebase_path("./third_party/boringssl/build_static/ssl/libssl.a", "."),
+    rebase_path("./third_party/boringssl/build_static/crypto/libcrypto.a", "."),
+    rebase_path("./third_party/usrsctp/lib_static/libusrsctp.a", "."),
+  ]
+}
+
+
+config("RTCSrtpConfig") {
+    defines = [
+        "HAVE_CONFIG_H",
+        "OPENSSL",
+        "GCM",
+        "HAVE_STDLIB_H",
+        "HAVE_STRING_H",
+        "HAVE_STDINT_H",
+        "HAVE_INTTYPES_H",
+        "HAVE_INT16_T",
+        "HAVE_INT32_T",
+        "HAVE_INT8_T",
+        "HAVE_UINT16_T",
+        "HAVE_UINT32_T",
+        "HAVE_UINT64_T",
+        "HAVE_UINT8_T",
+        "HAVE_ARPA_INET_H",
+        "HAVE_NETINET_IN_H",
+        "HAVE_SYS_TYPES_H",
+        "HAVE_UNISTD_H",
+        "PACKAGE_STRING=\"860492290f7d1f25e2bd45da6471bfd4cd4d7add\"",
+        "PACKAGE_VERSION=\"860492290f7d1f25e2bd45da6471bfd4cd4d7add\"",
+    ]
+
+    include_dirs = [
+        "src/third_party/libsrtp/include",
+        "src/third_party/libsrtp/config",
+        "src/third_party/libsrtp/crypto/include",
+        "third_party/boringssl/include",       
+    ]
+}
+
+rtc_sfu_shared_library("librtc_peerconnection") {
+    deps = [
+        "src",
+        "rtc_pc_src",
+        "src_update",
+        "third_party",
+    ]
+}

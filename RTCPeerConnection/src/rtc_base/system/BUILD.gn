@@ -1,0 +1,56 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../../rtc_peerconnection.gni")
+
+rtc_sfu_source_set("arch") {
+    sources = [
+        "arch.h",
+    ]
+}
+
+rtc_sfu_source_set("assume") {
+    sources = [
+        "assume.h",
+    ]
+}
+
+rtc_sfu_source_set("inline") {
+    sources = [
+        "inline.h",
+    ]
+}
+
+rtc_sfu_source_set("no_unique_address") {
+    sources = [
+        "no_unique_address.h",
+    ]
+}
+
+rtc_sfu_source_set("rtc_export") {
+    sources = [
+        "rtc_export.h",
+    ]
+}
+
+rtc_sfu_source_set("thread_registry") {
+    sources = [
+        "thread_registry.cc",
+        "thread_registry.h",
+    ]
+
+    deps = [
+        "..:location",
+        "..:logging",
+        "..:platform_thread_types",
+        "../synchronization:mutex",
+    ]
+}
+
+rtc_sfu_source_set("unused") {
+    sources = [
+        "unused.h",
+    ]
+}
+
+rtc_sfu_source_set("ignore_warnings") {
+  sources = [ "ignore_warnings.h" ]
+}

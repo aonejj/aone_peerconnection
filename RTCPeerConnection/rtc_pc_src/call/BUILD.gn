@@ -1,0 +1,267 @@
+# Copyright (c) 2024 The AONE SFU project authors.
+import("../../rtc_peerconnection.gni")
+
+group("call") {
+    deps = [
+        ":RTCAudioReceiveStream",
+        ":RTCAudioSendStream",
+        ":RTCCall",
+        ":RTCCallFactory",
+        ":RTCFlexFecReceiveStreamImpl",
+        ":RTCRtpTransportControllerSend",
+        ":RTCRtpTransportControllerSendInterface",
+        ":RTCRtxReceiveStream",
+        ":RTCVideoReceiveStream",
+        ":RTCVideoSendStream",
+        ":RTCRtpStreamReceiverController",
+    ]
+}
+
+rtc_sfu_source_set("RTCAudioReceiveStream") {
+    sources = [
+        "RTCAudioReceiveStream.cc",
+        "RTCAudioReceiveStream.h",
+    ]
+
+    deps = [
+        "../../src/api/audio_codecs",
+        "../../src/api:transport_api",
+        "../../src/api/crypto",
+        "../../src/api:rtp_parameters",
+        "../../src/api:scoped_refptr",
+        "../../src/api/transport/rtp:rtp_source",
+        "../../src/call:rtp_config",
+    ]
+}
+
+rtc_sfu_source_set("RTCAudioSendStream") {
+    sources = [
+        "RTCAudioSendStream.cc",
+        "RTCAudioSendStream.h",
+    ]
+
+    deps = [
+        "../api/call:RTCTransportSequenceNumberGenerator",
+        "../api/audio:RTCAudioPacketRouteSourceInterface",
+        "../../src/api/audio_codecs",
+        "../../src/api:transport_api",
+        "../../src/api/crypto",
+        "../../src/api:rtp_parameters",
+        "../../src/api:scoped_refptr",
+        "../../src/call:rtp_config",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/rtc_base:audio_format_to_string",
+        "../../src/rtc_base:stringutils",
+    ]
+}
+
+rtc_sfu_source_set("RTCCall") {
+    sources = [
+        "RTCCall.cc",
+        "RTCCall.h",
+    ]
+
+    deps = [
+        ":RTCAudioSendStream",
+        ":RTCVideoSendStream",
+        ":RTCRtpTransportControllerSend",
+        ":RTCFlexFecReceiveStreamImpl",
+        ":RTCRtpStreamReceiverController",
+        "..:_deprecate_defines",
+        "..:RTCThreadManagerInterface",
+         "../api/audio:RTCAudioRtpPacketListenSinkInterface",
+        "../api/audio:RTCAudioRtpPacketListenerProxy",
+        "../api/video:RTCVideoRtpPacketListenSinkInterface",
+        "../api/video:RTCVideoRtpPacketListenerProxy",
+        "../api/call:RTCTransportSequenceNumberGenerator",
+        "../api/call:RTCGetNetworkEstimateInterface",
+        "../audio:RTCAudioReceiveStreamImpl",
+        "../audio:RTCAudioSendStreamImpl",
+        "../modules/congestion_controller:RTCReceiveSideCongestionController",
+        "../video:RTCVideoSendStreamImpl",
+        "../video:RTCVideoReceiveStream2Impl",        
+        "../../src/api:media_types",
+        "../../src/api/task_queue",
+        "../../src/api/transport:network_control",
+        "../../src/api:scoped_refptr",
+        "../../src/api/video_codecs:video_stream",
+        "../../src/call:packet_receiver",
+        "../../src/call:flexfec_receive_stream",
+        "../../src/call:rtp_stream_receiver_controller",
+        "../../src/call:receive_time_calculator",
+        "../../src/modules/include",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/modules/utility",
+        "../../src/rtc_base/task_utils:pending_task_safety_flag",
+        "../../src/rtc_base:constructor_magic",
+        "../../src/rtc_base/network:sent_packet",
+        "../../src/rtc_base/task_utils:repeating_task",
+        "../../src/rtc_base:threading",
+        "../../src/rtc_base:stringutils",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base:time_utils",
+        "../../src/system_wrappers",
+        "../../src/video",
+    ]
+}
+
+rtc_sfu_source_set("RTCCallFactory") {
+    sources = [
+        "RTCCallFactory.cc",
+        "RTCCallFactory.h"
+    ]
+
+    deps = [
+        ":RTCCall",
+        "../api/audio:RTCAudioRtpPacketListenSinkInterface",        
+        "../api/call:RTCCallFactoryInterface",
+        "../../src/api/task_queue",
+        "../../src/rtc_base/system:no_unique_address",
+    ]
+}
+
+rtc_sfu_source_set("RTCFlexFecReceiveStreamImpl") {
+    sources = [
+        "RTCFlexFecReceiveStreamImpl.cc",
+        "RTCFlexFecReceiveStreamImpl.h",
+    ]
+
+    deps = [
+        "../modules/rtp_rtcp:RTCRtpRtcpRecvImpl",
+        "../../src/api:array_view",
+        "../../src/api:transport_api",
+        "../../src/api:rtp_parameters",
+        "../../src/call:flexfec_receive_stream",
+        "../../src/call:rtp_packet_sink_interface",
+        "../../src/call:rtp_stream_receiver_controller_interface",
+        "../../src/modules/rtp_rtcp",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/modules/utility",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base:location",
+        "../../src/rtc_base:stringutils",
+        "../../src/system_wrappers",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpTransportControllerSend") {
+    sources = [
+        "RTCRtpTransportControllerSend.cc",
+        "RTCRtpTransportControllerSend.h",
+    ]
+
+    deps = [
+        ":RTCRtpTransportControllerSendInterface",
+        "../../src/api:network_state_predictor",
+        "../../src/api/transport:network_control",
+        "../../src/api/transport:goog_cc",
+        "../../src/api/units:data_rate",
+        "../../src/api/units:time_delta",
+        "../../src/api/units:timestamp",
+        "../../src/api/units:data_size",
+        "../../src/call:rtp_bitrate_configurator",
+        "../../src/modules/congestion_controller/rtp:control_handler",
+        "../../src/modules/congestion_controller/rtp:transport_feedback",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/modules/utility",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base:rate_limiter",
+        "../../src/rtc_base:constructor_magic",
+        "../../src/rtc_base:network_route",
+        "../../src/rtc_base:race_checker",
+        "../../src/rtc_base:task_queue",
+        "../../src/rtc_base/task_utils:repeating_task",
+        "../../src/rtc_base/task_utils:pending_task_safety_flag",
+        "../../src/rtc_base/experiments:field_trial_parser",
+        "../modules/pacing:RTCPacketRouter",
+        "../modules/pacing:RTCTaskQueuePacedSender",
+        "..:_deprecate_defines",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpTransportControllerSendInterface") {
+    sources = [
+        "RTCRtpTransportControllerSendInterface.h",
+    ]
+
+    deps = [
+        "../../src/api/transport:bitrate_settings",
+        "../../src/api/units:timestamp",
+        "../../src/call:rtp_config",
+        "../../src/common_video:frame_counts",
+        "../../src/modules/rtp_rtcp",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "..:_deprecate_defines",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtxReceiveStream") {
+    sources = [
+        "RTCRtxReceiveStream.cc",
+        "RTCRtxReceiveStream.h",
+    ]
+
+    deps = [
+        "../../src/api:array_view",
+        "../../src/modules/rtp_rtcp",        
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/call:rtp_packet_sink_interface",
+        "../../src/rtc_base:checks",
+        "../../src/rtc_base:logging",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoReceiveStream") {
+    sources = [
+        "RTCVideoReceiveStream.cc",
+        "RTCVideoReceiveStream.h",
+    ]
+
+    deps = [
+        "../../src/api/video:video_rtp_headers",
+        "../../src/api:transport_api",
+        "../../src/api/crypto",
+        "../../src/api/transport/rtp:rtp_source",
+        "../../src/api/video_codecs:video_codecs_api",
+        "../../src/call:rtp_config",
+        "../../src/common_video:frame_counts",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/rtc_base:stringutils",
+    ]
+}
+
+rtc_sfu_source_set("RTCVideoSendStream") {
+    sources = [
+        "RTCVideoSendStream.cc",
+        "RTCVideoSendStream.h",
+    ]
+
+    deps = [
+        "../api/call:RTCTransportSequenceNumberGenerator",
+        "../api/video:RTCVideoPacketRouteSourceInterface",
+        "../../src/api/video:video_rtp_headers",
+        "../../src/api:transport_api",
+        "../../src/api/crypto",
+        "../../src/call:rtp_config",
+        "../../src/common_video:frame_counts",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/rtc_base:stringutils",
+    ]
+}
+
+rtc_sfu_source_set("RTCRtpStreamReceiverController") {
+    sources = [
+        "RTCRtpStreamReceiverController.cc",
+        "RTCRtpStreamReceiverController.h",
+    ]
+
+    deps = [
+        "../../src/call:rtp_stream_receiver_controller_interface",
+        "../../src/call:rtp_demuxer",
+        "../../src/modules/rtp_rtcp:rtp_rtcp_format",
+        "../../src/rtc_base:logging",
+        "../../src/rtc_base/synchronization:mutex",
+    ]
+}
