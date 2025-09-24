@@ -64,7 +64,7 @@ Layout follows the Google WebRTC source tree to simplify navigation and future u
 
 Email: jacques97jj@gmail.com
 
-LinkedIn: https://www.linkedin.com/in/%EC%A4%91%EC%A0%9C-%EC%9E%A5-71a6b010b/
+[LinkedIn](https://www.linkedin.com/in/%EC%A4%91%EC%A0%9C-%EC%9E%A5-71a6b010b/)
 
 ---
 
