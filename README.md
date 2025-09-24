@@ -39,8 +39,8 @@ Layout follows the Google WebRTC source tree to simplify navigation and future u
 1. Clone repository
 
    ```bash
-   git clone https://github.com/<your-repo>/RTCPeerConnection.git
-   cd RTCPeerConnection
+   git clone https://github.com/aonejj/aone_peerconnection.git
+   cd aone_peerconnection
 
 2. Generate build files
 
