@@ -37,7 +37,9 @@ rtc_sfu_source_set("vad") {
         "../../common_audio",
         "../../common_audio:vad",
         "../../common_audio:third_party",
+        "../../common_audio:resampler",
         "../../rtc_base:checks",
+        "../../rtc_base:logging",
         "../audio_coding:isac_vad",
     ]    
 }

@@ -30,6 +30,10 @@ rtc_sfu_source_set("audio_frame_operations") {
     ]
 
     deps = [
-        "../api/audio:audio_frame",
+       "../api/audio:audio_frame",
+       "../common_audio:audio_util_include",
+       "../rtc_base:checks",
+       "../rtc_base:safe_conversions",
+       "../rtc_base:deprecation",
     ]
 }

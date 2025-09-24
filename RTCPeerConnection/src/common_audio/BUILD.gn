@@ -111,11 +111,14 @@ rtc_sfu_source_set("resampler") {
     ]
 
     deps = [
+        ":audio_util_include",
+        ":signal_processing_library",
         "../api:array_view",
         "../rtc_base:checks",
         "../rtc_base:logging",   
         "../rtc_base/memory:aligned_malloc",
         "../rtc_base/system:arch",
+        "../system_wrappers:system_wrappers"
     ]
 }
 
@@ -138,5 +141,6 @@ rtc_sfu_source_set("vad") {
     deps = [
         ":signal_processing_library",
         "../rtc_base:checks",
+        "../rtc_base:sanitizer",
     ]
 }
