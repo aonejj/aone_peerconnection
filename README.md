@@ -1,75 +1,81 @@
-# aone_peerconnection
-Server PeerConnection (for SFU / RTC Server)
+# RTCPeerConnection (Server-Side)
 
-This repository provides a server-oriented RTCPeerConnection implementation
-based on the Google WebRTC Native source code.
-It is designed for use in SFU (Selective Forwarding Unit) servers,
-custom RTC servers, or as the core of a server-side SDK,
-where a lightweight, headless PeerConnection is required.
+A customized server-oriented implementation of Google's WebRTC Native `PeerConnection` designed for SFU/MCU media servers and real-time communication platforms.
 
-📂 Project Structure
-RTCPeerConnection/
-├─ rtc_pc_src/   # Custom classes replacing or extending Google WebRTC classes
-├─ src/          # Google origin code with unused modules removed and light modifications
-└─ src_update/   # Additional updates / patches
+This project provides a lightweight server-side PeerConnection core by restructuring Google's WebRTC codebase while keeping compatibility with the original API and build system.
 
+---
 
-Each directory follows the original Google WebRTC folder layout,
-making it easier to track upstream changes and compare with the official source.
+## Project Structure
 
-🔧 Build Environment
-Operating System: Ubuntu 21.04 or later (tested on Ubuntu 21/22)
-Compiler:  Clang (standard Ubuntu packages)
-Build System: GN + Ninja
+The repository is organized as follows:
 
-Dependency: Google WebRTC Native Source (BSD-3-Clause)
+- `rtc_pc_src/`   : New and replacement classes for server-side PeerConnection
+- `src/`          : Google WebRTC origin source with unnecessary components removed & minimal patches
+- `src_update/`   : Additional updates/patches for specific server features
 
-Example Build Steps
-# Generate GN build files
-gn gen out/Default --args='is_debug=false'
+Layout follows the Google WebRTC source tree to simplify navigation and future updates.
 
-# Compile using Ninja
-ninja -C out/Default
+---
 
+## Features
 
-Adjust gn args according to your environment or specific features you need.
+- **Server-Optimized PeerConnection**: Minimal client-side dependencies, tuned for SFU/MCU servers.
+- **Modular Design**: Clean separation of new/modified classes from original Google sources.
+- **Native Build System**: Uses GN + Ninja build flow as in Google WebRTC.
+- **Google-Compatible Licensing**: Distributed under BSD-3-Clause.
 
-⚡ Key Features
+---
 
-Server-side PeerConnection
-Enables direct use of WebRTC PeerConnection in a headless server context.
+## Build Environment
 
-Lightweight Core
-Removes unnecessary client-side modules to reduce binary size and dependencies.
+- **OS**: Ubuntu 21.04 or later
+- **Compiler**: Clang (required)
+- **Build System**: GN + Ninja
+- **Python 3** (for GN scripts)
 
-Extensible for SFU/MCU
-Serves as a foundation for custom SFU servers, SDKs, or real-time RTC applications.
+### Build Steps
 
-📜 License
-This project is released under the BSD-3-Clause license.
-The Google WebRTC source also uses BSD-3-Clause.
+1. Clone repository
 
-You must retain the original copyright notice,
-the BSD-3-Clause license text, and the disclaimer in any redistributions.
+   ```bash
+   git clone https://github.com/<your-repo>/RTCPeerConnection.git
+   cd RTCPeerConnection
 
-BSD-3-Clause Summary:
-✅ Commercial use, modification, redistribution, and closed-source integration are allowed.
-✅ You must keep copyright and license notices in all copies.
+2. Generate build files
 
-The LICENSE file in this repository includes both
-the original Google WebRTC license and this project’s BSD-3-Clause license.
+   ```bash
+   gn gen out/Default --args='is_debug=false'2. Generate build files
 
-⚠️ Notice
-This project is an independent modification of Google WebRTC Native.
-Google does not maintain or guarantee the quality of this code.
-Use it at your own risk and ensure compliance with all licensing requirements.
+2. Generate build files
 
-📬 Contact
+   ```bash
+   ninja -C out/Default
+
+## License
+
+  This project is licensed under the BSD-3-Clause license.
+  See the LICENSE file for full details.
+  This project includes code derived from Google WebRTC, which is also licensed under BSD-3-Clause.
+
+---
+
+## Contact
+
 Email: jacques97jj@gmail.com
-LinkedIn: LinkedIn Profile
 
-Suggestions for Contributors
-When submitting pull requests, please clearly document
-any changes to the build process or folder structure.
+LinkedIn: https://www.linkedin.com/in/%EC%A4%91%EC%A0%9C-%EC%9E%A5-71a6b010b/
 
-Keep modifications isolated to simplify upstream WebRTC updates.
+---
+
+## Contribution
+
+This project is currently in a read-only state for evaluation and reference. Issues and discussions are welcome.
+
+---
+
+## Acknowledgments
+
+This work builds upon Google WebRTC and respects its original design and licensing.
+
+---
