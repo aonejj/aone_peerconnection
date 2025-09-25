@@ -45,7 +45,7 @@ Layout follows the Google WebRTC source tree to simplify navigation and future u
 2. Generate build files
 
    ```bash
-   gn gen out/Default --args='is_debug=false'2. Generate build files
+   gn gen out/Default --args='is_debug=false'
 
 2. Generate build files
 
