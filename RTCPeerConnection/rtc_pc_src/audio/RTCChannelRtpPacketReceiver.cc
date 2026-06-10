@@ -20,7 +20,7 @@
 namespace webrtc {
 
 constexpr int kAbsSendTimeInterArrivalUpshift = 8;
-static const double kTimestampToMs = 1000.0 / static_cast<double>(1 << RTPHeaderExtension::kAbsSendTimeFraction + kAbsSendTimeInterArrivalUpshift);
+static const double kTimestampToMs = 1000.0 / static_cast<double>(1 << (RTPHeaderExtension::kAbsSendTimeFraction + kAbsSendTimeInterArrivalUpshift));
 
 namespace voe {
 

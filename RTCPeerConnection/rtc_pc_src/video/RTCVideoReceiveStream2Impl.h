@@ -98,8 +98,7 @@ public:
 	uint32_t RemoteSsrc();
 
 private:
-	void RequestKeyFrame(int64_t timestamp_ms, bool is_fir = true);
-		RTC_RUN_ON(worker_sequence_checker_);
+	void RequestKeyFrame(int64_t timestamp_ms, bool is_fir = true) RTC_RUN_ON(worker_sequence_checker_);
 
 	VideoCodecType _get_rtp_codec_type(const RtpPacketReceived& packet);
 
