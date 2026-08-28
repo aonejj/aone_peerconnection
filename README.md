@@ -1,8 +1,8 @@
 # RTCPeerConnection (Server-Side)
 
-A customized server-oriented implementation of Google's WebRTC Native `PeerConnection` designed for SFU/MCU media servers and real-time communication platforms.
+Server-Oriented PeerConnection: Restructured Google WebRTC's client-focused PeerConnection into a modular server core, with SFU-specific RTP handling (custom Pacer, RTCP, Simulcast routing).
 
-This project provides a lightweight server-side PeerConnection core by restructuring Google's WebRTC codebase while keeping compatibility with the original API and build system.
+Resource Model — In Progress: Currently each PeerConnection instance owns its own thread set (inherited from native WebRTC's per-factory threading). A shared worker-pool model (N workers per CPU core) is planned to support large-scale concurrent sessions.
 
 ---
 
